@@ -1,0 +1,120 @@
+{
+  "printer": "Gala",
+  "getval":{
+    "serial_no": "serial_no",
+    "printer_version": "printer_version",
+    "model": "printer_name",
+    "mileage": "mileage",
+    "cutter_cnt": "cutter_cnt",
+    "sw_ribbon": "sw_ribbon",
+    "print_mode": "print_mode",
+    "dpi": "dpi",
+    "tear_off": "tear_off",
+    "sensor_select": "sensor_select",
+    "media_power_up": "media_power_up",
+    "head_close": "head_close",
+    "buzzer": "buzzer",
+    "speed": "speed",
+    "density": "density",
+    "media_sensor": "media_sensor",
+    "ethernet_switch": "ethernet_switch",
+    "eth_dhcp": "eth_dhcp",
+    "eth_ip": "eth_ip",
+    "eth_mask":"eth_mask" ,
+    "eth_gateway":"eth_gateway",
+    "eth_mac":"eth_mac",
+    "wlan_mode":"wlan_mode",
+    "wlan_ssid": "wlan_ssid",
+    "wlan_key": "wlan_key",
+    "wlan_dhcp": "wlan_dhcp",
+    "wlan_ip": "wlan_ip",
+    "wlan_mask": "wlan_mask",
+    "wlan_gateway": "wlan_gateway",
+    "wlan_mac": "wlan_mac",
+    "wlan_key_require": "wlan_key_require",
+    "printer_time_year": "year",
+    "printer_time_month": "month",
+    "printer_time_day": "day",
+    "printer_time_hour": "hour",
+    "printer_time_minute": "minute",
+    "printer_time_second": "second",
+    "printer_time_timezone": "time_zone"
+  },
+  "do":{
+    "reset_printer": "reset_printer",
+    "factory_default": "factory_default",
+    "configguration_page": "configguration_page",
+    "cutter_test": "cutter_test"
+  },
+  "setval": {
+    "sw_ribbon":{
+      "Прямая термопечать": "off",
+      "Термотрансферная печать": "on"
+    },
+    "print_mode": {
+      "Оторвать этикетку": "tear",
+      "Отделитель этикетки": "peel",
+      "Гильотинный нож": "cutter",
+      "Барабанный нож": "roll_cutter",
+      "Смотчик": "recycle"
+    },
+    "sensor_select":{
+      "Автоматически": "auto",
+      "На просвет": "transmissive",
+      "На отражение": "reflective"
+    },
+    "media_power_up":{
+      "Нет": "none",
+      "Промотка": "feed",
+      "Калибровка": "calibration"
+    },
+    "head_close":{
+      "Нет": "none",
+      "Промотка": "feed",
+      "Калибровка": "calibration"
+    },
+    "tear_off": {
+      "min": -120,
+      "max": 120
+    },
+    "buzzer": {
+      "Отключить": "0",
+      "Низкий": "1",
+      "Стандартный": "2",
+      "Громкий": "3"
+    },
+    "speed":{
+      "min": 2,
+      "max": 12
+    },
+    "density": {
+      "min": 1,
+      "max": 30
+    },
+    "media_sensor": {
+      "Зазор": "gap",
+      "Непрерывный": "continuous",
+      "Черная метка": "black_mark"
+    },
+    "ethernet_switch":{
+      "Включено": "on",
+      "Выключено": "off"
+    },
+    "eth_dhcp":{
+      "Включено": "on",
+      "Выключено": "off"
+    },
+    "wlan_dhcp":{
+      "Включено": "on",
+      "Выключено": "off"
+    },
+    "wlan_mod":{
+      "Точка доступа": "ap",
+      "Подключение к сети": "sta"
+    },
+    "wlan_key_require": {
+      "Требуется": "YES",
+      "Не требуется": "NO"
+    }
+  }
+}

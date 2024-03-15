@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String
-from api.deps import Base
+from server.api.deps import Base
 from pydantic import BaseModel, HttpUrl, Field
 from typing import Sequence, List, Optional
 
@@ -15,9 +15,12 @@ class Printers(Base):
     inv_num = Column(String)
     location = Column(String)
     model = Column(String)
+    vendor_model = Column(String)
     add_time = Column(String)
     in_use = Column(Integer)
     profile_id = Column(Integer)
+    is_deleted = Column(Integer)
+
 
 class PrintersInfo(Base):
     __tablename__ = "PRINTERS_INFO"

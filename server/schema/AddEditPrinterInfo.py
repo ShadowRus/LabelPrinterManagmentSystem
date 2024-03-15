@@ -1,11 +1,12 @@
 from typing import Sequence, List, Optional
+from pydantic import BaseModel,Field
 
 class AddPrinter(BaseModel):
-    name:str=Field()
-    model: str = Field(default = 'label printer')
-    description: Optional[str] =None
-    name: str = Field()
-    host: str = Field()
+    serial:Optional[str] = None
+    model: Optional[str] = None
+    print_name:Optional[str] = None
+    inv_num: Optional[str] = None
+    url: str = Field()
     port: int = Field(default=9100)
-    resolution: Optional[str] = None
-    priority: Optional[int]= None
+    location: Optional[str] = None
+    in_use: int= Field(default=1)
