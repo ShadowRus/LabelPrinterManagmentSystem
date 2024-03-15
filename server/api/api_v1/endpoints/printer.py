@@ -24,6 +24,7 @@ router = APIRouter()
 def post_config_bd(data:AddPrinter,db: Session = Depends(deps.get_db)):
     if 2 == 2:
         # Добавляем принтер
+
         printer_temp = Printers(model = data.model,
                                 port = data.port,
                                 url = data.url,
@@ -36,6 +37,22 @@ def post_config_bd(data:AddPrinter,db: Session = Depends(deps.get_db)):
         # Уточняем серийный номер принтера
         if printer_temp.serial == None:
             printer_temp.serial = sgd_cmd(printer_temp.url,printer_temp.port,get_sgd("serial_no"))
+
+        # # Делаем проверку что такого серийника нет больше в списке, если есть, то помечаем на удаление первый встретившийся
+        # if len(db.query(Printers).filter(Printers.serial == printer_temp.serial).all()) >= 2:
+        #     pr_2 = db.query(Printers).filter(Printers.serial == printer_temp.serial).first()
+        #     if sgd_cmd(pr_2.url, pr_2.port, get_sgd("serial_no")) != pr_2.serial:
+        #         pr_2.is_deleted = 1
+        #         db.commit()
+        # if sgd_cmd(printer_temp.url, printer_temp.port, get_sgd("serial_no")) == printer_temp.serial:
+        #     # Делаем проверку что на этом порту больше никого нет если есть, то помечаем на удаление первый встретившийся
+        #     # Делаем проверку тут потому что мы только что проверили что порт отвечает и живой
+        #     if len(db.query(Printers).filter(Printers.url == printer_temp.url).all()) >= 2:
+        #         pr_2 = db.query(Printers).filter(Printers.url == printer_temp.url).first()
+        #         pr_2.is_deleted = 1
+        #         db.commit()
+
+
         # Уточняем модель
         if printer_temp.vendor_model == None:
             printer_temp.vendor_model = sgd_cmd(printer_temp.url, printer_temp.port, get_sgd("printer_name"))
