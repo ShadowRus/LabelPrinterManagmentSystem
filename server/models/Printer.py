@@ -77,7 +77,6 @@ class PrinterProfile(Base):
     sensor_select = Column(String)  # автоматически auto на просвет transmissive на отражение reflective
     media_power_up = Column(String)  # none промотка feed калибровка  calibration нет none
     head_close = Column(String)  # calibration промотка калибровка нет
-    # ppl = Column(String) #zpl
     buzzer = Column(String)  # 2 отключить - 0 низкий -1  стандартный - 2 громкий - 3
     speed = Column(String)  # 5 (2 - 12)
     density = Column(String)  # 10 (1 - 30)
@@ -87,7 +86,6 @@ class PrinterProfile(Base):
     eth_ip = Column(String)  # 192.168.0.105
     eth_mask = Column(String)  # 255.255.255.0
     eth_gateway = Column(String)  # 192.168.0.1
-    eth_mac = Column(String)  # 84:C2:E4:A8:40:EE
     wlan_mod = Column(String)  # ap/sta
     wlan_ssid = Column(String)  # ix4l
     wlan_key = Column(String)  # 12345678
@@ -95,7 +93,6 @@ class PrinterProfile(Base):
     wlan_ip = Column(String)  # 192.168.1.1
     wlan_mask = Column(String)  # 255.255.255.0
     wlan_gateway = Column(String)  # 192.168.1.1
-    wlan_mac = Column(String)  # 00:00:00:00:00:00
     wlan_key_require = Column(String)  # NO/YES
     printer_time = Column(Integer)
 
