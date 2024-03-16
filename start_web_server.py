@@ -4,6 +4,7 @@ from server.api.api import api_router
 from server.api import deps
 import socket
 from decouple import config
+import os
 
 
 def extract_ip():
@@ -35,3 +36,5 @@ if __name__ == "__main__":
 
     #uvicorn.run(app, host=HOST, port=443, log_level="debug", ssl_keyfile="./localhost+3-key.pem" , ssl_certfile="./localhost+3.pem")
     uvicorn.run(app, host=HOST, port=PORT, log_level="debug")
+    # start_web_ui = str('streamlit run ./web_ui/web_ui_console.py')
+    # os.popen(start_web_ui)

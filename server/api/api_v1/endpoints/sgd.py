@@ -1,0 +1,15 @@
+from fastapi import APIRouter
+from server.service.service import sgd_cmd,get_sgd,set_sgd,do_sgd
+router = APIRouter()
+
+@router.get("/setvalue",summary="Изменить настройку",description="Отправка управляющей команды на принтер")
+def set_sgd_to_print(host:str,port:int,set_key:str,set_value:str):
+    return sgd_cmd(host,port,set_sgd(set_key,set_value))
+
+@router.get("/getvalue",summary="Получить значение настройки",description="Получение значения настройки от принтера")
+def get_sgd_to_print(host:str,port:int,get_key:str):
+    return sgd_cmd(host,port,get_sgd(get_key))
+
+@router.get("/do",summary="Вызвать действие на принтере",description="Отправить команду DО на принтер")
+def do_sgd_to_print(host:str,port:int,cmd:str):
+    return sgd_cmd(host,port,do_sgd(cmd))
