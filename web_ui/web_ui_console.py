@@ -2,7 +2,7 @@ import streamlit as st
 import os
 from decouple import config
 import pandas as pd
-from service.service import add_printer_response
+from service.service import auto_add_printer_response,manual_add_printer_response,check_state,gala,PrinterSettings
 
 
 SRC_UI = config('SRC_UI',default='./web_ui/src')
@@ -38,17 +38,53 @@ with add_manual:
             st.table(df)
             if st.button('Добавить'):
                 # отправляем данные из файла на сервер
-                add_printer_response(df)
+                auto_add_printer_response(df)
 
 
 
     else:
         with st.expander('Добавить принтер'):
+            st.toggle('Принтер подключен и готов к работе',help="После добавления принтера произойдет опрос принтера и загрузка требуемой конфигурации",key='in_use')
             if st.checkbox('Serial_number',value=True):
-                st.text_input('Серийный номер принтера')
+                st.text_input('Серийный номер принтера',key='serial')
                 if st.checkbox('Добавить инвентарный номер для учета', value=False):
-                    st.text_input('Инвентарный номер принетера')
+                    st.text_input('Инвентарный номер принетера',key='inv_num')
             if st.checkbox('HOST:PORT',value=False):
-                st.text_input('Сетевой адрес принтера',key='add_host')
-                st.text_input('Порт принтера', value='9100',help='По умолчанию порт принтера 9100')
-            if st.checkbox('Расположение принтера',help="")
+                st.text_input('Сетевой адрес принтера',key='url')
+                st.text_input('Порт принтера', value='9100',help='По умолчанию порт принтера 9100',key='port')
+            if st.checkbox('Расположение принтера',
+                           help="При необходимости можно указать конкретное место,где планируется установка принтера"):
+                st.text_input('Физичесекое расположение принтера',key='location')
+            if st.button('Добавить'):
+                manual_add_printer_response(check_state('serial',st.session_state),
+                                            check_state('inv_num',st.session_state),
+                                            check_state('url',st.session_state),
+                                            check_state('port',st.session_state),
+                                            check_state('location',st.session_state),
+                                            check_state('in_use',st.session_state))
+
+cur_set = {
+    "printer_version":'0.0.1',
+    "sw_ribbon":'on',
+    "print_mode":"tear",
+    "sensor_select":"auto",
+    "media_power_up":'none',
+    "head_close":'feed',
+    "tear_off":14,
+    "buzzer":"3",
+    "speed":12,
+    "density":30
+
+}
+printer = PrinterSettings(gala,cur_set)
+printer.change_disabled()
+printer.printer_version()
+printer.sw_ribbon()
+printer.print_mode()
+printer.sensor_select()
+printer.media_power_up()
+printer.head_close()
+printer.tear_off()
+printer.buzzer()
+printer.speed()
+printer.density()

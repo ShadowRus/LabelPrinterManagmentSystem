@@ -60,6 +60,7 @@ def post_config_bd(data:AddPrinter,db: Session = Depends(deps.get_db)):
         printer_temp.model = rename(printer_temp.vendor_model)
         db.commit()
         db.refresh(printer_temp)
+
         if printer_temp.vendor_model in ['Gala', 'Glory', 'Glory-L']:
             printer_info_temp = get_info(printer_temp, gala)
             db.add(printer_info_temp)
