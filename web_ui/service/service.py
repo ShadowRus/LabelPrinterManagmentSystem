@@ -411,8 +411,6 @@ class  PrinterSettings:
                       key=str(i) + 'wlan_mac',
                       disabled=True)
         return
-    def wlan_key_require(self,i=''):
-        pass
     def printer_time(self,i=''):
         pass
     def reset_printer(self,i=''):
