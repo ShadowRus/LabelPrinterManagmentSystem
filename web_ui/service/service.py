@@ -4,6 +4,7 @@ import pandas
 import requests
 import json
 import streamlit as st
+import ipaddress
 
 
 def extract_ip():
@@ -110,7 +111,7 @@ class  PrinterSettings:
                       disabled=True)
         return
     def sw_ribbon(self,i=''):
-        if self.gala['getval']['sw_ribbon'] == 'off':
+        if self.cur_set[self.gala['getval']['sw_ribbon']] == 'off':
             v1 = 0
         else:
             v1= 1
@@ -141,7 +142,7 @@ class  PrinterSettings:
 
     def print_mode(self,i=''):
         st.selectbox('Режимы печати',list(self.gala['setval']['print_mode'].keys()),
-                     index=self.get_index(self.gala['setval']['print_mode'],self.cur_set['print_mode']),
+                     index=self.get_index(self.gala['setval']['print_mode'],self.cur_set[self.gala['getval']['print_mode']]),
                      key=str(i)+'print_mode',
                      disabled=bool(self.disabled), help='- **Режим отрыва**: Это самый базовый режим печати, который подходит для большинства обычных задач печати. В этом режиме принтер печатает этикетку и останавливается, позволяя пользователю вручную оторвать этикетку от принтера. '
                                                         'Это идеально подходит для небольших объемов печати, где потребность в автоматизации отсутствует.\r\n'
@@ -155,7 +156,7 @@ class  PrinterSettings:
 
     def sensor_select(self,i=''):
         st.selectbox('Настройка датчика', list(gala['setval']['sensor_select'].keys()),
-                     index=self.get_index(gala['setval']['sensor_select'], self.cur_set['sensor_select']),
+                     index=self.get_index(gala['setval']['sensor_select'], self.cur_set[self.gala['getval']['sensor_select']]),
                      key=str(i) + 'sensor_select',
                      disabled=bool(self.disabled),help='Выберите датчик носителя, соответствующий используемому носителю. '
                                                        'Датчик отражения( **на отражение**) следует использовать только для носителя с черными метками. '
@@ -164,7 +165,7 @@ class  PrinterSettings:
         return
     def media_power_up(self,i=''):
         st.selectbox('Действие при включении', list(gala['setval']['media_power_up'].keys()),
-                     index=self.get_index(gala['setval']['media_power_up'], self.cur_set['media_power_up']),
+                     index=self.get_index(gala['setval']['media_power_up'], self.cur_set[self.gala['getval']['media_power_up']]),
                      key=str(i) + 'media_power_up',
                      disabled=bool(self.disabled),
                      help='- **Промотка**: очень полезна, если вы регулярно меняете типы этикеток в принтере. Это позволяет обеспечить, что этикетка готова к печати сразу после включения устройства. \r\n'
@@ -174,7 +175,7 @@ class  PrinterSettings:
         return
     def head_close(self,i=''):
         st.selectbox('Действие при закрытии печатающей головы', list(gala['setval']['head_close'].keys()),
-                     index=self.get_index(gala['setval']['head_close'], self.cur_set['head_close']),
+                     index=self.get_index(gala['setval']['head_close'], self.cur_set[self.gala['getval']['head_close']]),
                      key=str(i) + 'head_close',
                      disabled=bool(self.disabled),
                      help=' - **Промотка**: Если вы только что вставили новый рулон этикеток, может быть полезно выполнить промотку, чтобы убедиться, что этикетки подаются правильно.\r\n'
@@ -186,13 +187,15 @@ class  PrinterSettings:
     def tear_off(self,i=''):
         st.slider('Отрыв.Настройка положеия остановки носителя',min_value=self.gala['setval']['tear_off']['min'],
                   max_value=self.gala['setval']['tear_off']['max'],
-                  value=int(self.cur_set['tear_off']),disabled=bool(self.disabled),key=str(i)+'tear_off',help='Эта настройка позволяет точно настроить положение остановки носителя.'
-                                                                                                             ' Диапазон значений: от «+» до «–»')
+                  value=int(self.cur_set[self.gala['getval']['tear_off']]),
+                  disabled=bool(self.disabled),
+                  key=str(i)+'tear_off',help='Эта настройка позволяет точно настроить положение остановки носителя.'
+                                             'Диапазон значений: от «+» до «–»')
         st.write(st.session_state[str(i)+'tear_off'])
         return
     def buzzer(self,i=''):
         st.selectbox('Громкость динамика принтера', list(gala['setval']['buzzer'].keys()),
-                     index=self.get_index(gala['setval']['buzzer'], self.cur_set['buzzer']),
+                     index=self.get_index(gala['setval']['buzzer'], self.cur_set[self.gala['getval']['buzzer']]),
                      key=str(i) + 'buzzer',
                      disabled=bool(self.disabled),
                      help='- **Отключенная**: Если принтер используется в тихой среде, такой как офис или библиотека, где шум может быть нарушающим, отключение звуковых сигналов может быть хорошим выбором. \r\n'
@@ -204,7 +207,7 @@ class  PrinterSettings:
     def speed(self,i=''):
         st.slider('Скорость печати', min_value=self.gala['setval']['speed']['min'],
                   max_value=self.gala['setval']['speed']['max'],
-                  value=int(self.cur_set['speed']), disabled=bool(self.disabled), key=str(i) + 'speed',
+                  value=int(self.cur_set[self.gala['getval']['speed']]), disabled=bool(self.disabled), key=str(i) + 'speed',
                   help='Выбор скорости печати на принтере этикеток зависит от нескольких факторов, включая качество печати, количество этикеток, которые вам нужно напечатать, и скорость, с которой вам нужны эти этикетки.\r\n'
                        '- **Высокая скорость печати**: Чем выше скорость печати, тем быстрее принтер сможет напечатать этикетки. '
                        'Это особенно полезно, если вам нужно напечатать большое количество этикеток за короткое время. '
@@ -231,37 +234,183 @@ class  PrinterSettings:
         st.write(st.session_state[str(i) + 'density'])
         return
     def media_sensor(self,i=''):
-        pass
+        st.selectbox('Тип носителя', list(gala['setval']['media_sensor'].keys()),
+                     index=self.get_index(gala['setval']['media_sensor'], self.cur_set[self.gala['getval']['media_sensor']]),
+                     key=str(i) + 'media_sensor',
+                     disabled=bool(self.disabled),
+                     help='- **С зазором**: Этикетки "с зазором" имеют небольшое пространство или зазор между каждой этикеткой. '
+                          'Это наиболее распространенный тип этикеток, используемых в термопринтерах, и они идеально подходят для большинства приложений стандартной печати этикеток, таких как адресные этикетки, этикетки для посылок и бирки на товар.\r\n'
+                          '- **Черная марка**: Этикетки "с черной маркой" имеют черные марки на обратной стороне, которые принтер использует в качестве сигналов для начала и окончания печати каждой этикетки. Этот тип этикеток обычно используется в специализированных приложениях, где требуется точное позиционирование печати.\r\n'
+                          '- **Непрерывный**: Это рулон непрерывного материала, который можно нарезать на любую длину. Этот тип этикеток идеально подходит для приложений, где размеры этикеток могут варьироваться, например, при печати длинных баннеров или знаков.')
+        st.write(self.gala['setval']['media_sensor'][st.session_state[str(i) + 'media_sensor']])
+        return
     def ethernet_switch(self,i=''):
-        pass
+        if self.cur_set[self.gala['getval']['ethernet_switch']] == 'off':
+            v1 = 0
+        else:
+            v1 = 1
+
+        st.checkbox('Подключение по Ethernet', value=v1, disabled=bool(self.disabled), key=str(i) + 'ethernet_switch',
+                    help='Настройка "Подключение по Ethernet" на принтере этикеток относится к возможности принтера подключаться к сети через Ethernet. Это позволяет принтеру обмениваться данными с компьютерами и другими устройствами в сети, что позволяет печатать этикетки из любого места в сети.'
+                         'Настройка "Подключение по Ethernet" может включать в себя следующие параметры:\r\n'
+                         '- **IP-адрес**: уникальный адрес, который идентифицирует принтер в сети.\r\n'
+                         '- **Маска подсети**: определяет, какие части IP-адреса используются для идентификации сети и хоста.\r\n'
+                         '- **Шлюз по умолчанию**: это маршрутизатор, который принтер использует для подключения к другим сетям.\r\n'
+                         '- **DHCP (Dynamic Host Configuration Protocol)**: Протокол динамической настройки хоста автоматически назначает IP-адрес и другие сетевые параметры принтеру, что упрощает процесс настройки сети. Если в настройках принтера выбрана опция "DHCP", принтер будет автоматически запрашивать эти данные от DHCP-сервера в сети каждый раз, когда он подключается к сети. Это может быть полезно на больших сетях, где вручную управлять IP-адресами может быть сложно.')
+        st.write(st.session_state[str(i) + 'ethernet_switch'])
+        return
     def eth_dhcp(self,i=''):
-        pass
+        if self.cur_set[self.gala['getval']['eth_dhcp']] == 'off':
+            v1 = 0
+        else:
+            v1 = 1
+
+        st.checkbox('**DHCP (Dynamic Host Configuration Protocol)**', value=v1, disabled=bool(self.disabled), key=str(i) + 'eth_dhcp',
+                    help='- **DHCP (Dynamic Host Configuration Protocol)**: '
+                         'Протокол динамической настройки хоста автоматически назначает IP-адрес и другие сетевые параметры принтеру, что упрощает процесс настройки сети. '
+                         'Если в настройках принтера выбрана опция "DHCP", принтер будет автоматически запрашивать эти данные от DHCP-сервера в сети каждый раз, когда он подключается к сети. '
+                         'Это может быть полезно на больших сетях, где вручную управлять IP-адресами может быть сложно.')
+        st.write(st.session_state[str(i) + 'eth_dhcp'])
+        return
+
+    def get_free_ip_in_subnet(self,network, port):
+        import socket
+        import ipaddress
+        for ip in list(ipaddress.IPv4Network(network))[101:]:
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            sock.settimeout(1)  # timeout after 1 second
+            try:
+                sock.connect((str(ip), port))
+                sock.close()
+            except socket.error:
+                return str(ip)  # return the free IP
+        return None
+
     def eth_ip(self,i=''):
-        pass
+        with st.expander('Ethernet IP4'):
+            if self.gala['getval']['eth_ip'] not in self.cur_set:
+                if st.checkbox('Найти свободный IP4 в сети для принтера',disabled=bool(self.disabled),value=False):
+                    self.cur_set[self.gala['getval']['eth_ip']] = self.get_free_ip_in_subnet('192.168.0.0/24',9100)
+                else:
+                   self.cur_set[self.gala['getval']['eth_ip']]=None
+            else:
+                if st.button('Найти свободный IP4 в сети для принтера',help='Поиск происходит в подсети 192.168.0/24'):
+                    st.success(self.get_free_ip_in_subnet('192.168.0.0/24', 9100))
+            st.text_input('IP4-адрес', value=self.cur_set[self.gala['getval']['eth_ip']],
+                          key=str(i) + 'eth_ip',
+                          disabled=bool(self.disabled))
+            st.write(st.session_state[str(i) + 'eth_ip'])
+            return
     def eth_mask(self,i=''):
-        pass
+        if self.gala['getval']['eth_mask'] not in self.cur_set:
+            self.cur_set[self.gala['getval']['eth_mask']]='255.255.255.0'
+        st.text_input('Маска подсети', value=self.cur_set[self.gala['getval']['eth_mask']],
+                      key=str(i) + 'eth_mask',
+                      disabled=bool(self.disabled),help='Например:255.255.255.0 \r\n'
+                                                        '**Маска подсети**: определяет, какие части IP-адреса используются для идентификации сети и хоста.')
+        st.write(st.session_state[str(i) + 'eth_mask'])
+        return
     def eth_gateway(self,i=''):
-        pass
+        if self.gala['getval']['eth_gateway'] not in self.cur_set:
+            self.cur_set[self.gala['getval']['eth_gateway']]='192.168.0.1'
+        st.text_input('Шлюз по-умолчанию', value=self.cur_set[self.gala['getval']['eth_gateway']],
+                  key=str(i) + 'eth_gateway',
+                  disabled=bool(self.disabled),
+                      help='**Шлюз по умолчанию**: это маршрутизатор, который принтер использует для подключения к другим сетям.')
+        st.write(st.session_state[str(i) + 'eth_gateway'])
+        return
     def eth_mac(self,i=''):
-        pass
+        st.text_input('Сетевой MAC-адрес принтера', value=self.cur_set[self.gala['getval']['eth_mac']],
+                      key=str(i) + 'eth_mac',
+                      disabled=True)
+        return
     def wlan_dhcp(self,i=''):
-        pass
-    def wlan_mod(self,i=''):
-        pass
+        if self.cur_set[self.gala['getval']['wlan_dhcp']] == 'off':
+            v1 = 0
+        else:
+            v1 = 1
+
+        st.checkbox('**DHCP (Dynamic Host Configuration Protocol)**', value=v1, disabled=bool(self.disabled),
+                    key=str(i) + 'wlan_dhcp',
+                    help='- **DHCP (Dynamic Host Configuration Protocol)**: '
+                         'Протокол динамической настройки хоста автоматически назначает IP-адрес и другие сетевые параметры принтеру, что упрощает процесс настройки сети. '
+                         'Если в настройках принтера выбрана опция "DHCP", принтер будет автоматически запрашивать эти данные от DHCP-сервера в сети каждый раз, когда он подключается к сети. '
+                         'Это может быть полезно на больших сетях, где вручную управлять IP-адресами может быть сложно.')
+        st.write(st.session_state[str(i) + 'wlan_dhcp'])
+        return
+    def wlan_mode(self,i=''):
+        st.selectbox('Режим работы WiFi', list(gala['setval']['wlan_mode'].keys()),
+                     index=self.get_index(gala['setval']['wlan_mode'], self.cur_set[self.gala['getval']['wlan_mode']]),
+                     key=str(i) + 'wlan_mode',
+                     disabled=bool(self.disabled),
+                     help='STA (Station mode): В этом режиме принтер этикеток подключается к существующей беспроводной сети, подобно тому как подключается ваш ноутбук или смартфон. '
+                          'Принтер будет идентифицировать сеть по ее SSID и подключиться к ней, используя пароль, если он требуется.\r\n'
+                          'AP (Access Point mode): В этом режиме принтер этикеток действует как беспроводной маршрутизатор или точка доступа, создавая свою собственную беспроводную сеть, к которой могут подключаться другие устройства. '
+                          'Это может быть полезно, если вы хотите подключиться напрямую к принтеру с мобильного устройства или компьютера, не подключаясь к существующей беспроводной сети.')
+        st.write(self.gala['setval']['wlan_mode'][st.session_state[str(i) + 'wlan_mode']])
+        return
     def wlan_ssid(self,i=''):
-        pass
+        if self.gala['getval']['wlan_ssid'] not in self.cur_set:
+            self.cur_set[self.gala['getval']['wlan_ssid']] = None
+        st.text_input('SSID WiFi Net', value=self.cur_set[self.gala['getval']['wlan_ssid']],
+                      key=str(i) + 'wlan_ssid',
+                      disabled=bool(self.disabled))
+        st.write(st.session_state[str(i) + 'wlan_ssid'])
+        return
     def wlan_key_require(self,i=''):
-        pass
+        if self.cur_set[self.gala['getval']['wlan_key_require']] == 'NO':
+            v1 = 0
+        if self.cur_set[self.gala['getval']['wlan_key_require']] == 'YES':
+            v1 = 1
+        st.checkbox('Требуется код подключения', value=v1, disabled=bool(self.disabled),
+                    key=str(i) + 'wlan_key_require',)
+        st.write(st.session_state[str(i) + 'wlan_key_require'])
+        return
     def wlan_key(self,i=''):
-        pass
+        if self.gala['getval']['wlan_key'] not in self.cur_set:
+            self.cur_set[self.gala['getval']['wlan_key']] = None
+        st.text_input('WiFi Net Password', value=self.cur_set[self.gala['getval']['wlan_key']],
+                      key=str(i) + 'wlan_key',
+                      disabled=bool(self.disabled),type='password')
+        st.write(st.session_state[str(i) + 'wlan_key'])
     def wlan_ip(self,i=''):
-        pass
+        with st.expander('WLAN IP4'):
+            if self.gala['getval']['wlan_ip'] not in self.cur_set:
+                if st.checkbox('Найти свободный IP4 в сети для принтера', disabled=bool(self.disabled), value=False):
+                    self.cur_set[self.gala['getval']['wlan_ip']] = self.get_free_ip_in_subnet('192.168.0.0/24', 9100)
+                else:
+                    self.cur_set[self.gala['getval']['wlan_ip']] = None
+            else:
+                if st.button('Найти свободный IP4 для принтера', help='Поиск происходит в подсети 192.168.0/24'):
+                    st.success(self.get_free_ip_in_subnet('192.168.0.0/24', 9100))
+            st.text_input('IP4-адрес', value=self.cur_set[self.gala['getval']['wlan_ip']],
+                          key=str(i) + 'wlan_ip',
+                          disabled=bool(self.disabled))
+            st.write(st.session_state[str(i) + 'wlan_ip'])
+            return
     def wlan_mask(self,i=''):
-        pass
+        if self.gala['getval']['wlan_mask'] not in self.cur_set:
+            self.cur_set[self.gala['getval']['wlan_mask']] = '255.255.255.0'
+        st.text_input('Маска подсети', value=self.cur_set[self.gala['getval']['wlan_mask']],
+                      key=str(i) + 'wlan_mask',
+                      disabled=bool(self.disabled), help='Например:255.255.255.0 \r\n'
+                                                         '**Маска подсети**: определяет, какие части IP-адреса используются для идентификации сети и хоста.')
+        st.write(st.session_state[str(i) + 'wlan_mask'])
+        return
     def wlan_gateway(self,i=''):
-        pass
+        if self.gala['getval']['wlan_gateway'] not in self.cur_set:
+            self.cur_set[self.gala['getval']['wlan_gateway']] = '192.168.0.1'
+        st.text_input('Шлюз по-умолчанию', value=self.cur_set[self.gala['getval']['wlan_gateway']],
+                      key=str(i) + 'wlan_gateway',
+                      disabled=bool(self.disabled),
+                      help='**Шлюз по умолчанию**: это маршрутизатор, который принтер использует для подключения к другим сетям.')
+        st.write(st.session_state[str(i) + 'wlan_gateway'])
+        return
     def wlan_mac(self,i=''):
-        pass
+        st.text_input('Сетевой (беспроводной) MAC-адрес принтера', value=self.cur_set[self.gala['getval']['wlan_mac']],
+                      key=str(i) + 'wlan_mac',
+                      disabled=True)
+        return
     def wlan_key_require(self,i=''):
         pass
     def printer_time(self,i=''):

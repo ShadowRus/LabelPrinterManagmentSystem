@@ -73,7 +73,25 @@ cur_set = {
     "tear_off":14,
     "buzzer":"3",
     "speed":12,
-    "density":30
+    "density":30,
+    "media_sensor":"gap",
+    "ethernet_switch":"on",
+    "eth_dhcp":"of",
+    "eth_mac":'rdrtyfuyguh',
+    "eth_gateway":None,
+    'eth_mask':None,
+    "eth_ip":'192.168.0.4',
+    "wlan_dhcp":'off',
+    "wlan_mod":'ap',
+    "wlan_key_require":'YES',
+    "wlan_mac":"wlan_mac",
+    "wlan_gateway":None,
+    "wlan_mask":None,
+    "wlan_ip":None,
+    "wlan_key":'123456788',
+    "wlan_ssid":'ATOL_GUESTS'
+
+
 
 }
 printer = PrinterSettings(gala,cur_set)
@@ -88,3 +106,19 @@ printer.tear_off()
 printer.buzzer()
 printer.speed()
 printer.density()
+printer.ethernet_switch()
+printer.eth_dhcp()
+printer.eth_mac()
+printer.eth_ip()
+printer.eth_mask()
+printer.eth_gateway()
+printer.wlan_dhcp()
+printer.wlan_ssid()
+printer.wlan_gateway()
+printer.wlan_mask()
+printer.wlan_mac()
+printer.wlan_mode()
+printer.wlan_key()
+printer.wlan_key_require()
+printer.wlan_ip()
+
