@@ -121,4 +121,5 @@ printer.wlan_mode()
 printer.wlan_key()
 printer.wlan_key_require()
 printer.wlan_ip()
+printer.reuest_data()
 

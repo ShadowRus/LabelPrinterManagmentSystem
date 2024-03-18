@@ -89,8 +89,23 @@ class  PrinterSettings:
         pass
     def tab_view(self):
         pass
+
+    def send_data_to_url(self,url, data, retries=3):
+        for i in range(retries):
+            try:
+                response = requests.post(url, data=data)
+                response.raise_for_status()  # Если ответ сервера не 200, вызывается HTTPError.
+                return response
+            except (ConnectionError, requests.HTTPError) as e:
+                if i < retries - 1:  # i is zero indexed
+                    continue
+                else:
+                    return str(e)
     def reuest_data(self):
-        pass
+        if st.button('Изменить настройки'):
+            self.k_values['printer_id']= self.cur_set['printer_id']
+            st.write(self.k_values)
+        return
     def serial_no(self,i=''):
         st.text_input('DPI', value=self.cur_set[self.gala['getval']['serial_no']], key=str(i) + 'serial_no', disabled=True)
         return
@@ -137,7 +152,7 @@ class  PrinterSettings:
                 st.warning('Выбрана **ПрямаяТермоПечать(ПТП)**')
             else:
                 st.warning('Выбрана **ТермоТрансфернаяПечать(ПТП)**')
-        self.k_values['sw_ribbon'] = st.session_state[str(i) + 'sw_ribbon']
+        self.k_values['sw_ribbon'] = int(st.session_state[str(i) + 'sw_ribbon'])
         return
     def get_index(self,dict_,value):
         keys_list = list(dict_.keys())
@@ -261,7 +276,7 @@ class  PrinterSettings:
                          '- **Маска подсети**: определяет, какие части IP-адреса используются для идентификации сети и хоста.\r\n'
                          '- **Шлюз по умолчанию**: это маршрутизатор, который принтер использует для подключения к другим сетям.\r\n'
                          '- **DHCP (Dynamic Host Configuration Protocol)**: Протокол динамической настройки хоста автоматически назначает IP-адрес и другие сетевые параметры принтеру, что упрощает процесс настройки сети. Если в настройках принтера выбрана опция "DHCP", принтер будет автоматически запрашивать эти данные от DHCP-сервера в сети каждый раз, когда он подключается к сети. Это может быть полезно на больших сетях, где вручную управлять IP-адресами может быть сложно.')
-        self.k_values['ethernet_switch'] = st.session_state[str(i) + 'ethernet_switch']
+        self.k_values['ethernet_switch'] = int(st.session_state[str(i) + 'ethernet_switch'])
         return
     def eth_dhcp(self,i=''):
         if self.cur_set[self.gala['getval']['eth_dhcp']] == 'off':
@@ -273,7 +288,7 @@ class  PrinterSettings:
                          'Протокол динамической настройки хоста автоматически назначает IP-адрес и другие сетевые параметры принтеру, что упрощает процесс настройки сети. '
                          'Если в настройках принтера выбрана опция "DHCP", принтер будет автоматически запрашивать эти данные от DHCP-сервера в сети каждый раз, когда он подключается к сети. '
                          'Это может быть полезно на больших сетях, где вручную управлять IP-адресами может быть сложно.')
-        self.k_values['eth_dhcp']= st.session_state[str(i) + 'eth_dhcp']
+        self.k_values['eth_dhcp']= int(st.session_state[str(i) + 'eth_dhcp'])
         return
 
     def get_free_ip_in_subnet(self,network, port):
@@ -339,7 +354,7 @@ class  PrinterSettings:
                          'Протокол динамической настройки хоста автоматически назначает IP-адрес и другие сетевые параметры принтеру, что упрощает процесс настройки сети. '
                          'Если в настройках принтера выбрана опция "DHCP", принтер будет автоматически запрашивать эти данные от DHCP-сервера в сети каждый раз, когда он подключается к сети. '
                          'Это может быть полезно на больших сетях, где вручную управлять IP-адресами может быть сложно.')
-        self.k_values['wlan_dhcp']=st.session_state[str(i) + 'wlan_dhcp']
+        self.k_values['wlan_dhcp']=int(st.session_state[str(i) + 'wlan_dhcp'])
         return
     def wlan_mode(self,i=''):
         st.selectbox('Режим работы WiFi', list(gala['setval']['wlan_mode'].keys()),
@@ -367,7 +382,7 @@ class  PrinterSettings:
             v1 = 1
         st.checkbox('Требуется код подключения', value=v1, disabled=bool(self.disabled),
                     key=str(i) + 'wlan_key_require',)
-        self.k_values['wlan_key_require']=st.session_state[str(i) + 'wlan_key_require']
+        self.k_values['wlan_key_require']= int(st.session_state[str(i) + 'wlan_key_require'])
         return
     def wlan_key(self,i=''):
         if self.gala['getval']['wlan_key'] not in self.cur_set:
