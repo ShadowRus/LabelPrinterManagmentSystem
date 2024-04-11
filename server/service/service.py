@@ -5,10 +5,18 @@ import socket
 import ipaddress
 
 
+
 def read_json_to_dict(json_file_path):
     with open(json_file_path,'r',encoding='utf-8') as file:
         return json.load(file)
 
+SGD_GALA = config('SGD_GALA')
+gala = read_json_to_dict(SGD_GALA)
+
+SGD_APOLLO = config('SGD_APOLLO')
+apollo = read_json_to_dict(SGD_APOLLO)
+SERIAL_NO = config('SERIAL_NO',default='serial_no')
+VENDOR_MODEL = config('VENDOR_MODEL',default='printer_name')
 
 def get_sgd(get_value):
     s1 = f'\x1b\x1c& V1 getval "{get_value}"\r\n'
@@ -22,25 +30,29 @@ def do_sgd(key):
     s1 = f'\x1b\x1c& V1 do "{key}"\r\n'
     return s1.encode()
 
-def get_info(printer_temp, gala):
+def get_info(data, gala):
     printer_info_temp = PrintersInfo(
-        printer_id=printer_temp.id,
-        mileage=int(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['mileage'])), 16)*10,
-        cutter_cnt=int(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['cutter_cnt']))),
-        dpi=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['dpi']))),
-        version=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['printer_version']))),
-        eth_mac=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['eth_mac']))),
-        wlan_mac=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['wlan_mac'])))
+        printer_id=data.id,
+        url = data.url,
+        port = data.port,
+        vendor_model = str(sgd_cmd(data.url, data.port,get_sgd(gala['getval']["model"]))),
+        model = rename(str(sgd_cmd(data.url, data.port,get_sgd(gala['getval']["model"])))),
+        mileage=int(sgd_cmd(data.url, data.port, get_sgd(gala['getval']['mileage']))) * 0.0254,
+        cutter_cnt=int(sgd_cmd(data.url, data.port, get_sgd(gala['getval']['cutter_cnt']))),
+        dpi=str(sgd_cmd(data.url, data.port, get_sgd(gala['getval']['dpi']))),
+        version=str(sgd_cmd(data.url, data.port, get_sgd(gala['getval']['printer_version']))),
+        eth_mac=str(sgd_cmd(data.url, data.port, get_sgd(gala['getval']['eth_mac']))),
+        wlan_mac=str(sgd_cmd(data.url, data.port, get_sgd(gala['getval']['wlan_mac'])))
     )
     return printer_info_temp
 
-def update_info(printer_temp, printer_info_temp,gala):
-    printer_info_temp.mileage=int(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['mileage'])), 16)*10
-    printer_info_temp.cutter_cnt=int(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['cutter_cnt'])))
-    printer_info_temp.dpi=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['dpi'])))
-    printer_info_temp.version=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['printer_version'])))
-    printer_info_temp.eth_mac=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['eth_mac'])))
-    printer_info_temp.wlan_mac=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['wlan_mac'])))
+def update_info(printer_info_temp,gala):
+    printer_info_temp.mileage=int(sgd_cmd(printer_info_temp.url, printer_info_temp.port, get_sgd(gala['getval']['mileage'])))*0.0254
+    printer_info_temp.cutter_cnt=int(sgd_cmd(printer_info_temp.url, printer_info_temp.port, get_sgd(gala['getval']['cutter_cnt'])))
+    printer_info_temp.dpi=str(sgd_cmd(printer_info_temp.url, printer_info_temp.port, get_sgd(gala['getval']['dpi'])))
+    printer_info_temp.version=str(sgd_cmd(printer_info_temp.url, printer_info_temp.port, get_sgd(gala['getval']['printer_version'])))
+    printer_info_temp.eth_mac=str(sgd_cmd(printer_info_temp.url, printer_info_temp.port, get_sgd(gala['getval']['eth_mac'])))
+    printer_info_temp.wlan_mac=str(sgd_cmd(printer_info_temp.url, printer_info_temp.port, get_sgd(gala['getval']['wlan_mac'])))
     return printer_info_temp
 
 def get_current_set(printer_temp, gala):
@@ -107,7 +119,7 @@ def zpl_cmd(host,port,zpl):
 def rename(printer_name):
     if printer_name == 'Gala':
         return 'ATOL TT631'
-    if printer_name == 'Glory-L':
+    if printer_name in ['Glory-L','iX4L-203']:
         return 'ATOL TT621'
     if printer_name in ['HT800-203','HT830']:
         return 'ATOL TT43'
@@ -115,6 +127,16 @@ def rename(printer_name):
         return 'ATOL TT44'
     else:
         return printer_name
+
+def cmd_dict(vendor_model):
+    if vendor_model in ['Glory-L','iX4L-203','Gala']:
+        return gala
+    if vendor_model in ['HT800-203','HT830']:
+        return apollo
+    if vendor_model in ['Apollo','Apollo Pro-203']:
+        return apollo
+    else:
+        return {}
 
 def check_ip_adresses(network,port):
     occupied_ips=[]
@@ -128,5 +150,3 @@ def check_ip_adresses(network,port):
             pass
     return occupied_ips
 
-SGD_GALA = config('SGD_GALA')
-gala = read_json_to_dict(SGD_GALA)

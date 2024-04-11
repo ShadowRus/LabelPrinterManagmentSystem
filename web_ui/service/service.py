@@ -1,6 +1,6 @@
 import socket
 from decouple import config
-import pandas
+import pandas as pd
 import requests
 import json
 import streamlit as st
@@ -26,10 +26,18 @@ def read_json_to_dict(json_file_path):
 HOST_BACKEND = config('HOST_SERVER', default=extract_ip())
 PORT_BACKEND = config('PORT_SERVER', default=8091)
 SGD_GALA = config('SGD_GALA')
+POST_SETTINGS =config('POST_SETTINGS',default='/v1/settings')
+POST_PRINTER = config('POST_PRINTER',default = '/v1/printer')
+GET_PRINTERS = config('GET_PRINTERS',default = '/v1/printers')
+GET_PRINTERS_INFO= config('GET_PRINTERS_INFO',default = '/v1/printers/info')
+GET_PRINTER_CURR = config('GET_PRINTER_CURR',default='/v1/printer/current_set')
+
 gala = read_json_to_dict(SGD_GALA)
 
 def auto_add_printer_response(df):
     resp={}
+    success_resp = {}
+    error_resp = {}
     for index, row in df.iterrows():
         if 'HOST' in df.columns:
             resp['url'] = str(row['HOST'])
@@ -43,14 +51,24 @@ def auto_add_printer_response(df):
             resp['serial'] = str(row['SERIAL_NO'])
         if 'IS ACTIVE' in df.columns:
             resp['in_use'] = int(row['IS ACTIVE'])
-        url_add = str('http://')+str(HOST_BACKEND)+':'+str(PORT_BACKEND)+'/v1/printer'
+        url_add = str('http://')+str(HOST_BACKEND)+':'+str(PORT_BACKEND)+ str(POST_PRINTER)
         response = requests.post(url_add,data=json.dumps(resp))
-    return
+        if response.status_code == 200:
+            if 'SERIAL_NO' in df.columns:
+                success_resp.update(resp['serial'])
+            else:
+                success_resp.update(resp['serial'])
+        else:
+            if 'SERIAL_NO' in df.columns:
+                error_resp.update(resp['serial'])
+            else:
+                error_resp.update(resp['serial'])
+    return success_resp,error_resp
 
 def manual_add_printer_response(serial,inv_num,url,port,location,in_use):
     resp={}
     if serial != None:
-        resp['serial'] =  serial
+        resp['serial'] = serial
     if inv_num != None:
         resp['inv_num'] = inv_num
     if url != None:
@@ -58,14 +76,68 @@ def manual_add_printer_response(serial,inv_num,url,port,location,in_use):
     if port != None:
         resp['port'] = int(port)
     else:
-        resp['port'] =9100
+        resp['port'] = 9100
     if location != None:
         resp['location'] = location
     resp['in_use'] = int(in_use)
     print(resp)
-    url_add = str('http://')+str(HOST_BACKEND) + ':' + str(PORT_BACKEND) + '/v1/printer'
-    response = requests.post(url_add, data=json.dumps(resp))
-    return response.status_code
+    try:
+        url_add = str('http://')+str(HOST_BACKEND) + ':' + str(PORT_BACKEND) + str(POST_PRINTER)
+        response = requests.post(url_add, data=json.dumps(resp))
+        response.raise_for_status()
+        return response.status_code, response.json()
+    except (requests.exceptions.RequestException, ValueError) as err:
+        print(f'Ошибка получения данных с {str('http://') + str(HOST_BACKEND) + ':' + str(PORT_BACKEND) + str(POST_PRINTER)} :{err}')
+        return 500, {}
+
+
+
+def printers():
+    try:
+        re = requests.get(str('http://') + str(HOST_BACKEND) + ':' + str(PORT_BACKEND) + str(GET_PRINTERS))
+        re.raise_for_status()
+        j1 = re.json()
+        df1 = pd.DataFrame.from_records(j1)
+    except (requests.exceptions.RequestException,ValueError) as err:
+        print(f'Ошибка получения данных с {str('http://') + str(HOST_BACKEND) + ':' + str(PORT_BACKEND) + str(GET_PRINTERS)} :{err}')
+        df1 = pd.DataFrame()
+    try:
+        re2 = requests.get(str('http://') + str(HOST_BACKEND) + ':' + str(PORT_BACKEND) + str(GET_PRINTERS_INFO))
+        re2.raise_for_status()
+        j2 = re2.json()
+        df2 = pd.DataFrame.from_records(j2)
+    except (requests.exceptions.RequestException,ValueError) as err:
+        print(f'Ошибка получения данных с {str('http://') + str(HOST_BACKEND) + ':' + str(PORT_BACKEND) + str(GET_PRINTERS_INFO)} :{err}')
+        df2 = pd.DataFrame()
+
+    if not df1.empty and not df2.empty:
+        merged_df = pd.merge(df1,df2,left_on='id',right_on='printer_id')
+        merged_df.set_index('id_x',inplace=True)
+        merged_df = merged_df[['serial', 'mileage','cutter_cnt','url', 'port', 'model',
+                               'inv_num', 'location', 'in_use','eth_mac','wlan_mac','version','profile_id']]
+    else:
+        merged_df = pd.DataFrame(columns=['serial', 'mileage','cutter_cnt','url', 'port', 'model',
+                               'inv_num', 'location', 'in_use','eth_mac','wlan_mac','version','profile_id'])
+    return merged_df
+
+
+def printer_info(printer_id):
+    re = requests.get(str('http://') + str(HOST_BACKEND) + ':' + str(PORT_BACKEND) + str(GET_PRINTERS_INFO),
+                      params={"printer_id":int(printer_id)})
+    if re.status_code == 200:
+        j1 = re.json()
+    else:
+        j1 = {}
+    return j1
+
+def printer_curr_set(printer_id):
+    re = requests.get(str('http://') + str(HOST_BACKEND) + ':' + str(PORT_BACKEND) + str(GET_PRINTER_CURR),
+                      params={"printer_id":int(printer_id)})
+    if re.status_code == 200:
+        j1 = re.json()
+    else:
+        j1 = {}
+    return j1
 
 def check_state(key,dict):
     if key not in dict:

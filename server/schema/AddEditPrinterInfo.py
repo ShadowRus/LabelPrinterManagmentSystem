@@ -10,6 +10,16 @@ class AddPrinter(BaseModel):
     port: int = Field(default=9100)
     location: Optional[str] = None
     in_use: int= Field(default=1)
+    network: Optional[str] = None
+
+class PrinterID(BaseModel):
+    printer_id:int = Field()
+    serial: Optional[str] = None
+    port: int = Field(default=9100)
+    url: Optional[str] = None
+    inv_num: Optional[str] = None
+    network: Optional[str] = None
+    vendor_model:Optional[str] = None
 
 class SyhchPrinter(BaseModel):
     serial:Optional[str] = None

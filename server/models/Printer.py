@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String,Float
 from server.api.deps import Base
 from pydantic import BaseModel, HttpUrl, Field
 from typing import Sequence, List, Optional
@@ -9,13 +9,9 @@ class Printers(Base):
     __tablename__ = "PRINTERS"
     id = Column(Integer, primary_key=True, index=True)
     print_name = Column(String)
-    url = Column(String)
-    port = Column(Integer)
     serial = Column(String,index=True)
     inv_num = Column(String)
     location = Column(String)
-    model = Column(String)
-    vendor_model = Column(String)
     add_time = Column(String)
     in_use = Column(Integer)
     profile_id = Column(Integer)
@@ -26,7 +22,11 @@ class PrintersInfo(Base):
     __tablename__ = "PRINTERS_INFO"
     id = Column(Integer, primary_key=True, index=True)
     printer_id = Column(Integer,index=True)
-    mileage = Column(Integer) #723.23
+    url = Column(String)
+    port = Column(Integer)
+    model = Column(String)
+    vendor_model = Column(String)
+    mileage = Column(Float) #723.23
     cutter_cnt = Column(Integer)
     dpi = Column(String) #203
     version = Column(String) #02.00.30
