@@ -23,7 +23,7 @@
     "eth_mask":"eth_mask" ,
     "eth_gateway":"eth_gateway",
     "eth_mac":"eth_mac",
-    "wlan_mode":"wlan_mod",
+    "wlan_mod":"wlan_mod",
     "wlan_ssid": "wlan_ssid",
     "wlan_key": "wlan_key",
     "wlan_dhcp": "wlan_dhcp",
@@ -108,7 +108,7 @@
       "Включено": "on",
       "Выключено": "off"
     },
-    "wlan_mode":{
+    "wlan_mod":{
       "Точка доступа AP": "ap",
       "Подключение к сети STA": "sta"
     },

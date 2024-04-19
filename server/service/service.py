@@ -92,6 +92,80 @@ def get_current_set(printer_temp, gala):
     )
     return printer_settings_temp
 
+
+def get_current_set(host,port, gala):
+    resp = {}
+    resp['serial_no'] = str(sgd_cmd(host, port, get_sgd(gala['getval']['serial_no'])))
+    resp['printer_version'] = str(sgd_cmd(host, port, get_sgd(gala['getval']['printer_version'])))
+    resp['printer_name'] = rename(str(sgd_cmd(host, port ,get_sgd(gala['getval']["model"]))))
+    resp['sw_ribbon'] = str(sgd_cmd(host, port, get_sgd(gala['getval']['sw_ribbon'])))
+    resp['print_mode']  = str(sgd_cmd(host,port, get_sgd(gala['getval']['print_mode'])))
+    resp['tear_off']= str(sgd_cmd(host,port, get_sgd(gala['getval']['tear_off'])))
+    resp['sensor_select'] = str(sgd_cmd(host, port, get_sgd(gala['getval']['sensor_select'])))
+    resp['mileage'] = str(int(sgd_cmd(host, port, get_sgd(gala['getval']['mileage'])))*0.0254)
+    resp['cutter_cnt'] = str(sgd_cmd(host, port, get_sgd(gala['getval']['cutter_cnt'])))
+    resp['dpi'] = str(sgd_cmd(host, port, get_sgd(gala['getval']['dpi'])))
+    resp['tear_off'] = str(sgd_cmd(host, port, get_sgd(gala['getval']['tear_off'])))
+    resp['media_power_up'] = str(sgd_cmd(host, port, get_sgd(gala['getval']['media_power_up'])))
+    resp['head_close'] = str(sgd_cmd(host, port, get_sgd(gala['getval']['head_close'])))
+    resp['buzzer'] = str(sgd_cmd(host, port, get_sgd(gala['getval']['buzzer'])))
+    resp['speed'] = str(sgd_cmd(host, port, get_sgd(gala['getval']['speed'])))
+    resp['density'] = str(sgd_cmd(host, port, get_sgd(gala['getval']['density'])))
+    resp['media_sensor'] = str(sgd_cmd(host, port, get_sgd(gala['getval']['media_sensor'])))
+    resp['ethernet_switch'] = str(sgd_cmd(host, port, get_sgd(gala['getval']['ethernet_switch'])))
+    resp['eth_dhcp'] = str(sgd_cmd(host, port, get_sgd(gala['getval']['eth_dhcp'])))
+    resp['eth_ip'] = str(sgd_cmd(host, port, get_sgd(gala['getval']['eth_ip'])))
+    resp['eth_mask'] = str(sgd_cmd(host, port, get_sgd(gala['getval']['eth_mask'])))
+    resp['eth_gateway'] = str(sgd_cmd(host, port, get_sgd(gala['getval']['eth_gateway'])))
+    resp['eth_mac'] = str(sgd_cmd(host, port, get_sgd(gala['getval']['eth_mac'])))
+    resp['wlan_mod'] = str(sgd_cmd(host, port, get_sgd(gala['getval']['wlan_mod'])))
+    resp['wlan_ssid'] = str(sgd_cmd(host, port, get_sgd(gala['getval']['wlan_ssid'])))
+    resp['wlan_key'] = str(sgd_cmd(host, port, get_sgd(gala['getval']['wlan_key'])))
+    resp['wlan_dhcp'] = str(sgd_cmd(host, port, get_sgd(gala['getval']['wlan_dhcp'])))
+    resp['wlan_ip'] = str(sgd_cmd(host, port, get_sgd(gala['getval']['wlan_ip'])))
+    resp['wlan_mask'] = str(sgd_cmd(host, port, get_sgd(gala['getval']['wlan_mask'])))
+    resp['wlan_gateway'] = str(sgd_cmd(host, port, get_sgd(gala['getval']['wlan_gateway'])))
+    resp['wlan_mac'] = str(sgd_cmd(host, port, get_sgd(gala['getval']['wlan_mac'])))
+    resp['wlan_key_require'] = str(sgd_cmd(host, port, get_sgd(gala['getval']['wlan_key_require'])))
+    resp['wlan_key_require'] = str(sgd_cmd(host, port, get_sgd(gala['getval']['wlan_key_require'])))
+
+
+    # printer_settings_temp = PrintersSettings(
+    #     printer_id = printer_temp.id,
+    #     sw_ribbon = str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['sw_ribbon']))),
+    #     print_mode=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['print_mode']))),
+    #     tear_off=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['tear_off']))),
+    #     sensor_select=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['sensor_select']))),
+    #     media_power_up=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['media_power_up']))),
+    #     head_close=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['head_close']))),
+    #     buzzer=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['buzzer']))),
+    #     speed=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['speed']))),
+    #     density=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['density']))),
+    #     media_sensor=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['media_sensor']))),
+    #     ethernet_switch=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['ethernet_switch']))),
+    #     eth_dhcp=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['eth_dhcp']))),
+    #     eth_ip=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['eth_ip']))),
+    #     eth_mask=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['eth_mask']))),
+    #     eth_gateway=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['eth_gateway']))),
+    #     eth_mac=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['eth_mac']))),
+    #     wlan_mod=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['wlan_mode']))),
+    #     wlan_ssid=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['wlan_ssid']))),
+    #     wlan_key=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['wlan_key']))),
+    #     wlan_dhcp=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['wlan_dhcp']))),
+    #     wlan_ip=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['wlan_ip']))),
+    #     wlan_mask=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['wlan_mask']))),
+    #     wlan_gateway=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['wlan_gateway']))),
+    #     wlan_mac=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['wlan_mac']))),
+    #     wlan_key_require=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['wlan_key_require']))),
+    #     printer_time_year=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['printer_time_year']))),
+    #     printer_time_month=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['printer_time_month']))),
+    #     printer_time_day=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['printer_time_day']))),
+    #     printer_time_hour=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['printer_time_hour']))),
+    #     printer_time_minute=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['printer_time_minute']))),
+    #     printer_time_second=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['printer_time_second'])))
+    # )
+    return resp
+
 def sgd_cmd(host,port,sgd):
     import socket
     mysocket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
@@ -117,7 +191,7 @@ def zpl_cmd(host,port,zpl):
     return
 
 def rename(printer_name):
-    if printer_name == 'Gala':
+    if printer_name in ['Gala','Gala-203']:
         return 'ATOL TT631'
     if printer_name in ['Glory-L','iX4L-203']:
         return 'ATOL TT621'
@@ -125,6 +199,8 @@ def rename(printer_name):
         return 'ATOL TT43'
     if printer_name in ['Apollo','Apollo Pro-203']:
         return 'ATOL TT44'
+    if printer_name in ['XT100']:
+        return 'ATOL TT42'
     else:
         return printer_name
 

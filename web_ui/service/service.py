@@ -31,6 +31,8 @@ POST_PRINTER = config('POST_PRINTER',default = '/v1/printer')
 GET_PRINTERS = config('GET_PRINTERS',default = '/v1/printers')
 GET_PRINTERS_INFO= config('GET_PRINTERS_INFO',default = '/v1/printers/info')
 GET_PRINTER_CURR = config('GET_PRINTER_CURR',default='/v1/printer/current_set')
+SCAN_NETWORK = config('SCAN_NETWORK',default = '/v1/scan')
+GET_CURRENT_SET = config('GET_CURRENT_SET',default ='/v1/current_set' )
 
 gala = read_json_to_dict(SGD_GALA)
 
@@ -90,7 +92,30 @@ def manual_add_printer_response(serial,inv_num,url,port,location,in_use):
         print(f'Ошибка получения данных с {str('http://') + str(HOST_BACKEND) + ':' + str(PORT_BACKEND) + str(POST_PRINTER)} :{err}')
         return 500, {}
 
-
+# def add_printer_info(printer_id,serial,url,port,network):
+#     resp={}
+#     if printer_id != None:
+#         resp['printer_id'] = printer_id
+#     if serial != None:
+#         resp['serial'] = serial
+#     if url != None:
+#         resp['url'] = str(url)
+#     if network != None:
+#         resp['network'] = network
+#     if port != None:
+#         resp['port'] = int(port)
+#     else:
+#         resp['port'] = 9100
+#     print(resp)
+#     try:
+#         url_add = str('http://')+str(HOST_BACKEND) + ':' + str(PORT_BACKEND) + str(GET_PRINTERS_INFO)
+#         response = requests.post(url_add, data=json.dumps(resp))
+#         response.raise_for_status()
+#         return response.status_code, response.json()
+#     except (requests.exceptions.RequestException, ValueError) as err:
+#         print(f'Ошибка получения данных с {str('http://') + str(HOST_BACKEND) + ':' + str(PORT_BACKEND) + str(GET_PRINTERS_INFO)} :{err}')
+#         return 500, {}
+#
 
 def printers():
     try:
@@ -139,6 +164,29 @@ def printer_curr_set(printer_id):
         j1 = {}
     return j1
 
+
+def scan_network(network,port):
+    try:
+        url_add = str('http://')+str(HOST_BACKEND) + ':' + str(PORT_BACKEND) + str(SCAN_NETWORK)
+        response = requests.get(url_add, params={"network":str(network), 'port':port})
+        response.raise_for_status()
+        return response.status_code, response.json()
+    except (requests.exceptions.RequestException, ValueError) as err:
+        print(f'Ошибка получения данных с http://{str(HOST_BACKEND)}:{str(PORT_BACKEND)}{str(SCAN_NETWORK)}:{err}')
+        return 500, {}
+
+
+def get_current_set(host,port):
+    try:
+        url_add = str('http://')+str(HOST_BACKEND) + ':' + str(PORT_BACKEND) + str(GET_CURRENT_SET)
+        response = requests.get(url_add, params={"host":str(host), 'port':port})
+        response.raise_for_status()
+        return response.status_code, response.json()
+    except (requests.exceptions.RequestException, ValueError) as err:
+        print(f'Ошибка получения данных с http://{str(HOST_BACKEND)}:{str(PORT_BACKEND)}{str(GET_CURRENT_SET)}:{err}')
+        return 500, {}
+
+
 def check_state(key,dict):
     if key not in dict:
         return None
@@ -179,7 +227,7 @@ class  PrinterSettings:
             st.write(self.k_values)
         return
     def serial_no(self,i=''):
-        st.text_input('DPI', value=self.cur_set[self.gala['getval']['serial_no']], key=str(i) + 'serial_no', disabled=True)
+        st.text_input('Серийный номер', value=self.cur_set[self.gala['getval']['serial_no']], key=str(i) + 'serial_no', disabled=True)
         return
     def printer_version(self,i=''):
         st.text_input('Версия прошивки принтера',value=self.cur_set[self.gala['getval']['printer_version']],key=str(i)+'printer_version',disabled=True)
@@ -197,7 +245,7 @@ class  PrinterSettings:
         return
     def cutter_cnt(self,i=''):
         st.text_input('Количество отрезов ножа, шт', value=self.cur_set[self.gala['getval']['cutter_cnt']],
-                      key=str(i) + 'mileage',
+                      key=str(i) + 'cutter_cnt',
                       disabled=True)
         return
     def sw_ribbon(self,i=''):
@@ -429,15 +477,15 @@ class  PrinterSettings:
         self.k_values['wlan_dhcp']=int(st.session_state[str(i) + 'wlan_dhcp'])
         return
     def wlan_mode(self,i=''):
-        st.selectbox('Режим работы WiFi', list(gala['setval']['wlan_mode'].keys()),
-                     index=self.get_index(gala['setval']['wlan_mode'], self.cur_set[self.gala['getval']['wlan_mode']]),
-                     key=str(i) + 'wlan_mode',
+        st.selectbox('Режим работы WiFi', list(gala['setval']['wlan_mod'].keys()),
+                     index=self.get_index(gala['setval']['wlan_mod'], self.cur_set[self.gala['getval']['wlan_mod']]),
+                     key=str(i) + 'wlan_mod',
                      disabled=bool(self.disabled),
                      help='STA (Station mode): В этом режиме принтер этикеток подключается к существующей беспроводной сети, подобно тому как подключается ваш ноутбук или смартфон. '
                           'Принтер будет идентифицировать сеть по ее SSID и подключиться к ней, используя пароль, если он требуется.\r\n'
                           'AP (Access Point mode): В этом режиме принтер этикеток действует как беспроводной маршрутизатор или точка доступа, создавая свою собственную беспроводную сеть, к которой могут подключаться другие устройства. '
                           'Это может быть полезно, если вы хотите подключиться напрямую к принтеру с мобильного устройства или компьютера, не подключаясь к существующей беспроводной сети.')
-        self.k_values['wlan_mode']= self.gala['setval']['wlan_mode'][st.session_state[str(i) + 'wlan_mode']]
+        self.k_values['wlan_mod']= self.gala['setval']['wlan_mod'][st.session_state[str(i) + 'wlan_mod']]
         return
     def wlan_ssid(self,i=''):
         if self.gala['getval']['wlan_ssid'] not in self.cur_set:
@@ -452,6 +500,8 @@ class  PrinterSettings:
             v1 = 0
         if self.cur_set[self.gala['getval']['wlan_key_require']] == 'YES':
             v1 = 1
+        if self.cur_set[self.gala['getval']['wlan_key_require']] == '':
+            v1 = ''
         st.checkbox('Требуется код подключения', value=v1, disabled=bool(self.disabled),
                     key=str(i) + 'wlan_key_require',)
         self.k_values['wlan_key_require']= int(st.session_state[str(i) + 'wlan_key_require'])
