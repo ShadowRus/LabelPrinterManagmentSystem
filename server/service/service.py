@@ -102,7 +102,7 @@ def get_current_set(host,port, gala):
     resp['print_mode']  = str(sgd_cmd(host,port, get_sgd(gala['getval']['print_mode'])))
     resp['tear_off']= str(sgd_cmd(host,port, get_sgd(gala['getval']['tear_off'])))
     resp['sensor_select'] = str(sgd_cmd(host, port, get_sgd(gala['getval']['sensor_select'])))
-    resp['mileage'] = str(int(sgd_cmd(host, port, get_sgd(gala['getval']['mileage'])))*0.0254)
+    resp['mileage'] = str(float(sgd_cmd(host, port, get_sgd(gala['getval']['mileage'])))*0.0254)
     resp['cutter_cnt'] = str(sgd_cmd(host, port, get_sgd(gala['getval']['cutter_cnt'])))
     resp['dpi'] = str(sgd_cmd(host, port, get_sgd(gala['getval']['dpi'])))
     resp['tear_off'] = str(sgd_cmd(host, port, get_sgd(gala['getval']['tear_off'])))
@@ -185,10 +185,19 @@ def sgd_cmd(host,port,sgd):
     finally:
         mysocket.close()
 
-
-
 def zpl_cmd(host,port,zpl):
-    return
+    import socket
+    mysocket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+    try:
+        mysocket.connect((host,port))
+        mysocket.settimeout(5)
+        mysocket.send(zpl)
+        #recv = mysocket.recv(4096).decode('utf-8')
+        return
+    except:
+        return None
+    finally:
+        mysocket.close()
 
 def rename(printer_name):
     if printer_name in ['Gala','Gala-203']:

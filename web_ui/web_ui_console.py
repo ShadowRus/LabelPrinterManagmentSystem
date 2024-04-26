@@ -2,10 +2,47 @@ import streamlit as st
 import os
 from decouple import config
 import pandas as pd
-from service.service import auto_add_printer_response,manual_add_printer_response,check_state,gala,PrinterSettings,printers,printer_info,scan_network,get_current_set
+from service.service import auto_add_printer_response,manual_add_printer_response,check_state,gala,PrinterSettings,printers,printer_info,scan_network,get_current_set,set_value
 
 
 SRC_UI = config('SRC_UI',default='./web_ui/src')
+
+
+def send_set_value(key,gala):
+    if key in st.session_state['curr_set']:
+        if key not in ['sw_ribbon','print_mode','sensor_select','media_power_up',
+                           'head_close','media_sensor','ethernet_switch','eth_dhcp','wlan_dhcp',
+                           'wlan_mod','wlan_key_require']:
+            if st.session_state[str(i) + key] != st.session_state['curr_set'][key]:
+                status, re_data = set_value(hoster, 9100, key, st.session_state[str(i) + key])
+                if status == 200:
+                    st.toast(f':green[Применено]: **{key}**   **:red[{st.session_state[str(i) + key]}]**')
+                else:
+                    st.toast(f':red[Не применено]: **{key}**   **:red[{st.session_state[str(i) + key]}]**')
+        elif key == 'sw_ribbon':
+            if st.session_state['curr_set']['sw_ribbon'] == 'on':
+                temp1= True
+            else:
+                temp1 = False
+            if temp1 != st.session_state[str(i) + 'sw_ribbon']:
+                if st.session_state[str(i) + 'sw_ribbon'] == True:
+                    temp1 = 'on'
+                else:
+                    temp1 = 'off'
+                status, re_data = set_value(hoster, 9100, key, temp1)
+                if status == 200:
+                    st.toast(f':green[Применено]: **ТТП**   **:red[{temp1}]**')
+                else:
+                    st.toast(f':red[Не применено]: **ТТП**   **:red[{temp1}]**')
+        elif key == 'print_mode':
+                status, re_data = set_value(hoster, 9100, key, gala['setval'][key][st.session_state[str(i)+key]])
+                if status == 200:
+                    st.toast(f':green[Применено]: **{key}**   **:red[{st.session_state[str(i)+key]}]**')
+                else:
+                    st.toast(f':red[Не применено]: **{key}**   **:red[{st.session_state[str(i)+key]}]**')
+
+
+
 
 
 
@@ -109,7 +146,8 @@ if st.session_state['sidebar_main'] == 'Изменение настроек':
         if status == 200:
             #st.write(resp_data)
             st.session_state['scan_pr'] = resp_data
-    if st.checkbox('Указать вручную'):
+    st.markdown('### Настройки', unsafe_allow_html=True)
+    if st.checkbox('Указать вручную сетевой адрес принтера'):
         st.text_input('IP4',key = 'ip_4_1')
         hoster = st.session_state['ip_4_1']
     else:
@@ -176,7 +214,6 @@ if st.session_state['sidebar_main'] == 'Изменение настроек':
             printer.eth_gateway()
         if 'eth_mac' in st.session_state['curr_set']:
             printer.eth_mac()
-
         if 'wlan_mod' in st.session_state['curr_set']:
             if st.session_state['curr_set']['buzzer'] not in ['', None, "None", 'none']:
                 printer.wlan_mode()
@@ -199,8 +236,17 @@ if st.session_state['sidebar_main'] == 'Изменение настроек':
         if st.session_state[str(i)+'is_disabled'] == True:
             if st.button('Обновить настройки'):
                 st.success(f'Настройки успешно обновлены на {st.session_state['ip_4_1']} ( {st.session_state[str(i) + 'serial_no']} )')
-
+                st.write(st.session_state['curr_set']['sw_ribbon'])
+                st.write(st.session_state[str(i)+'sw_ribbon'])
+                #st.write(st.session_state)
+                send_set_value('sw_ribbon',gala)
+                send_set_value('print_mode', gala)
+                send_set_value('tear_off', gala)
+                send_set_value('density', gala)
+                send_set_value('eth_ip', gala)
+                #send_set_value('tear_off', gala)
         #st.write(st.session_state)
+
 
 
 

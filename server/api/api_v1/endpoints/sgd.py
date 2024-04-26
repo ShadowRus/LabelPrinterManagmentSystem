@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse
-from server.service.service import sgd_cmd,get_sgd,set_sgd,do_sgd,get_current_set,gala
+from server.service.service import sgd_cmd,get_sgd,set_sgd,do_sgd,get_current_set,gala,zpl_cmd
 router = APIRouter()
 
 @router.get("/setvalue",summary="Изменить настройку",description="Отправка управляющей команды на принтер")
@@ -17,5 +17,8 @@ def do_sgd_to_print(host:str,port:int,cmd:str):
 
 @router.get("/current_set",summary="Получить значение текущих настроек",description="Получение значения настройки от принтера")
 def get_sgd_to_print(host:str,port:int):
-
     return JSONResponse(status_code=200, content={'status': get_current_set(host,port,gala)})
+
+@router.get("/zpl",summary="Вызвать действие на принтере",description="Отправить команду DО на принтер")
+def do_sgd_to_print(host:str,port:int,zpl:str):
+    return zpl_cmd(host,port,zpl)

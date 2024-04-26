@@ -26,9 +26,12 @@ def read_json_to_dict(json_file_path):
 HOST_BACKEND = config('HOST_SERVER', default=extract_ip())
 PORT_BACKEND = config('PORT_SERVER', default=8091)
 SGD_GALA = config('SGD_GALA')
+SGD_TT42 = config('SGD_TT42')
 POST_SETTINGS =config('POST_SETTINGS',default='/v1/settings')
 POST_PRINTER = config('POST_PRINTER',default = '/v1/printer')
 GET_PRINTERS = config('GET_PRINTERS',default = '/v1/printers')
+SET_VALUE = config('SET_VALUE',default = '/v1/setvalue')
+DO_CMD = config('DO_CMD',default = '/v1/do')
 GET_PRINTERS_INFO= config('GET_PRINTERS_INFO',default = '/v1/printers/info')
 GET_PRINTER_CURR = config('GET_PRINTER_CURR',default='/v1/printer/current_set')
 SCAN_NETWORK = config('SCAN_NETWORK',default = '/v1/scan')
@@ -155,6 +158,7 @@ def printer_info(printer_id):
         j1 = {}
     return j1
 
+# текущие настройки от базы
 def printer_curr_set(printer_id):
     re = requests.get(str('http://') + str(HOST_BACKEND) + ':' + str(PORT_BACKEND) + str(GET_PRINTER_CURR),
                       params={"printer_id":int(printer_id)})
@@ -178,8 +182,18 @@ def scan_network(network,port):
 
 def get_current_set(host,port):
     try:
-        url_add = str('http://')+str(HOST_BACKEND) + ':' + str(PORT_BACKEND) + str(GET_CURRENT_SET)
-        response = requests.get(url_add, params={"host":str(host), 'port':port})
+        url = str('http://')+str(HOST_BACKEND) + ':' + str(PORT_BACKEND) + str(GET_CURRENT_SET)
+        response = requests.get(url, params={"host":str(host), 'port':port})
+        response.raise_for_status()
+        return response.status_code, response.json()
+    except (requests.exceptions.RequestException, ValueError) as err:
+        print(f'Ошибка получения данных с http://{str(HOST_BACKEND)}:{str(PORT_BACKEND)}{str(GET_CURRENT_SET)}:{err}')
+        return 500, {}
+
+def set_value(host,port,setkey,setvalue):
+    try:
+        url_add = str('http://')+str(HOST_BACKEND) + ':' + str(PORT_BACKEND) + str(SET_VALUE)
+        response = requests.get(url_add, params={"host":str(host), 'port':port,"set_key":setkey,"set_value":setvalue})
         response.raise_for_status()
         return response.status_code, response.json()
     except (requests.exceptions.RequestException, ValueError) as err:
