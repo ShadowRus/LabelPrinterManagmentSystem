@@ -25,8 +25,8 @@ def read_json_to_dict(json_file_path):
 
 HOST_BACKEND = config('HOST_SERVER', default=extract_ip())
 PORT_BACKEND = config('PORT_SERVER', default=8091)
-SGD_GALA = config('SGD_GALA')
-SGD_TT42 = config('SGD_TT42')
+SGD_GALA = config('SGD_GALA',default='./server/src/sgdGala.json')
+SGD_TT42 = config('SGD_TT42',default='./server/src/sgdGala.json')
 POST_SETTINGS =config('POST_SETTINGS',default='/v1/settings')
 POST_PRINTER = config('POST_PRINTER',default = '/v1/printer')
 GET_PRINTERS = config('GET_PRINTERS',default = '/v1/printers')
@@ -92,7 +92,7 @@ def manual_add_printer_response(serial,inv_num,url,port,location,in_use):
         response.raise_for_status()
         return response.status_code, response.json()
     except (requests.exceptions.RequestException, ValueError) as err:
-        print(f'Ошибка получения данных с {str('http://') + str(HOST_BACKEND) + ':' + str(PORT_BACKEND) + str(POST_PRINTER)} :{err}')
+        print(f"Ошибка получения данных с {str('http://') + str(HOST_BACKEND) + ':' + str(PORT_BACKEND) + str(POST_PRINTER)} :{err}")
         return 500, {}
 
 # def add_printer_info(printer_id,serial,url,port,network):
@@ -127,7 +127,7 @@ def printers():
         j1 = re.json()
         df1 = pd.DataFrame.from_records(j1)
     except (requests.exceptions.RequestException,ValueError) as err:
-        print(f'Ошибка получения данных с {str('http://') + str(HOST_BACKEND) + ':' + str(PORT_BACKEND) + str(GET_PRINTERS)} :{err}')
+        print(f"Ошибка получения данных с {str('http://') + str(HOST_BACKEND) + ':' + str(PORT_BACKEND) + str(GET_PRINTERS)} :{err}")
         df1 = pd.DataFrame()
     try:
         re2 = requests.get(str('http://') + str(HOST_BACKEND) + ':' + str(PORT_BACKEND) + str(GET_PRINTERS_INFO))
@@ -135,7 +135,7 @@ def printers():
         j2 = re2.json()
         df2 = pd.DataFrame.from_records(j2)
     except (requests.exceptions.RequestException,ValueError) as err:
-        print(f'Ошибка получения данных с {str('http://') + str(HOST_BACKEND) + ':' + str(PORT_BACKEND) + str(GET_PRINTERS_INFO)} :{err}')
+        print(f"Ошибка получения данных с {str('http://') + str(HOST_BACKEND) + ':' + str(PORT_BACKEND) + str(GET_PRINTERS_INFO)} :{err}")
         df2 = pd.DataFrame()
 
     if not df1.empty and not df2.empty:

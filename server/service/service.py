@@ -10,14 +10,12 @@ def read_json_to_dict(json_file_path):
     with open(json_file_path,'r',encoding='utf-8') as file:
         return json.load(file)
 
-SGD_GALA = config('SGD_GALA')
-gala = read_json_to_dict(SGD_GALA)
-
-SGD_APOLLO = config('SGD_APOLLO')
-apollo = read_json_to_dict(SGD_APOLLO)
+SGD_GALA = config('SGD_GALA',default = './server/src/sgdGala.json')
+SGD_APOLLO = config('SGD_APOLLO',default = './server/src/sgdGala.json')
 SERIAL_NO = config('SERIAL_NO',default='serial_no')
 VENDOR_MODEL = config('VENDOR_MODEL',default='printer_name')
-
+gala = read_json_to_dict(SGD_GALA)
+apollo = read_json_to_dict(SGD_APOLLO)
 def get_sgd(get_value):
     s1 = f'\x1b\x1c& V1 getval "{get_value}"\r\n'
     return s1.encode()
