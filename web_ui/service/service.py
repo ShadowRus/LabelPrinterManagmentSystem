@@ -197,8 +197,17 @@ def set_value(host,port,setkey,setvalue):
         response.raise_for_status()
         return response.status_code, response.json()
     except (requests.exceptions.RequestException, ValueError) as err:
-        print(f'Ошибка получения данных с http://{str(HOST_BACKEND)}:{str(PORT_BACKEND)}{str(GET_CURRENT_SET)}:{err}')
+        print(f'Ошибка получения данных с http://{str(HOST_BACKEND)}:{str(PORT_BACKEND)}{str(SET_VALUE)}:{err}')
         return 500, {}
+
+def do(host,port,do_cmd):
+    try:
+        url_add = str('http://')+str(HOST_BACKEND) + ':' + str(PORT_BACKEND) + str(DO_CMD)
+        response = requests.get(url_add, params={"host":str(host), 'port':port,"cmd":do_cmd})
+        return
+    except (requests.exceptions.RequestException, ValueError) as err:
+        print(f'Ошибка получения данных с http://{str(HOST_BACKEND)}:{str(PORT_BACKEND)}{str(DO_CMD)}:{err}')
+        return
 
 
 def check_state(key,dict):
@@ -373,7 +382,7 @@ class  PrinterSettings:
         self.k_values['speed']= st.session_state[str(i) + 'speed']
         return
     def density(self,i=''):
-        st.slider('Скорость печати', min_value=self.gala['setval']['density']['min'],
+        st.slider('Плотность печати', min_value=self.gala['setval']['density']['min'],
                   max_value=self.gala['setval']['density']['max'],
                   value=int(self.cur_set['density']), disabled=bool(self.disabled), key=str(i) + 'density',
                   help='Настройка плотности или температуры печати на принтере этикеток зависит от типа используемых материалов (этикетки и лента) и требуемой детализации печати.\r\n'

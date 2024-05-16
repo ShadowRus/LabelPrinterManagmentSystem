@@ -2,7 +2,7 @@ import streamlit as st
 import os
 from decouple import config
 import pandas as pd
-from service.service import auto_add_printer_response,manual_add_printer_response,check_state,gala,PrinterSettings,printers,printer_info,scan_network,get_current_set,set_value
+from service.service import auto_add_printer_response,manual_add_printer_response,check_state,gala,PrinterSettings,printers,printer_info,scan_network,get_current_set,set_value,do
 
 
 SRC_UI = config('SRC_UI',default='./web_ui/src')
@@ -10,10 +10,10 @@ SRC_UI = config('SRC_UI',default='./web_ui/src')
 
 def send_set_value(key,gala):
     if key in st.session_state['curr_set']:
-        if key not in ['sw_ribbon','print_mode','sensor_select','media_power_up',
+        if key not in ['sw_ribbon','print_mode','sensor_select','media_power_up','buzzer',
                            'head_close','media_sensor','ethernet_switch','eth_dhcp','wlan_dhcp',
                            'wlan_mod','wlan_key_require']:
-            if st.session_state[str(i) + key] != st.session_state['curr_set'][key]:
+            if str(st.session_state[str(i) + key]) != st.session_state['curr_set'][key]:
                 status, re_data = set_value(hoster, 9100, key, st.session_state[str(i) + key])
                 if status == 200:
                     st.toast(f':green[Применено]: **{key}**   **:red[{st.session_state[str(i) + key]}]**')
@@ -34,12 +34,23 @@ def send_set_value(key,gala):
                     st.toast(f':green[Применено]: **ТТП**   **:red[{temp1}]**')
                 else:
                     st.toast(f':red[Не применено]: **ТТП**   **:red[{temp1}]**')
-        elif key == 'print_mode':
+        elif key in ['print_mode','sensor_select','media_power_up','head_close','media_sensor','wlan_mod','buzzer']:
+            if st.session_state['curr_set'][key] != gala['setval'][key][st.session_state[str(i) + key]]:
                 status, re_data = set_value(hoster, 9100, key, gala['setval'][key][st.session_state[str(i)+key]])
                 if status == 200:
                     st.toast(f':green[Применено]: **{key}**   **:red[{st.session_state[str(i)+key]}]**')
                 else:
                     st.toast(f':red[Не применено]: **{key}**   **:red[{st.session_state[str(i)+key]}]**')
+        # elif key == 'buzzer':
+        #     st.write(st.session_state['curr_set'][key])
+        #     st.write(gala['setval'][key][st.session_state[str(i) + key]])
+        #     if st.session_state['curr_set'][key] != gala['setval'][key][st.session_state[str(i) + key]]:
+        #         st.write(gala['setval'][key][st.session_state[str(i)+key]])
+                # status, re_data = set_value(hoster, 9100, key, gala['setval'][key][st.session_state[str(i)+key]])
+                # if status == 200:
+                #     st.toast(f':green[Применено]: **{key}**   **:red[{st.session_state[str(i)+key]}]**')
+                # else:
+                #     st.toast(f':red[Не применено]: **{key}**   **:red[{st.session_state[str(i)+key]}]**')
 
 
 
@@ -188,10 +199,10 @@ if st.session_state['sidebar_main'] == 'Изменение настроек':
         if 'sensor_select' in st.session_state['curr_set']:
             printer.sensor_select()
         if 'media_power_up' in st.session_state['curr_set']:
-            if st.session_state['curr_set']['media_power_up'] not in ['', None, "None", 'none']:
+            if st.session_state['curr_set']['media_power_up'] not in ['', None]:
                 printer.media_power_up()
         if 'head_close' in st.session_state['curr_set']:
-            if st.session_state['curr_set']['head_close'] not in ['',None,"None",'none']:
+            if st.session_state['curr_set']['head_close'] not in ['',None]:
                 printer.head_close()
         if 'buzzer' in st.session_state['curr_set']:
             if st.session_state['curr_set']['buzzer'] not in ['', None, "None", 'none']:
@@ -236,15 +247,31 @@ if st.session_state['sidebar_main'] == 'Изменение настроек':
         if st.session_state[str(i)+'is_disabled'] == True:
             if st.button('Обновить настройки'):
                 st.success(f'Настройки успешно обновлены на {st.session_state['ip_4_1']} ( {st.session_state[str(i) + 'serial_no']} )')
-                st.write(st.session_state['curr_set']['sw_ribbon'])
-                st.write(st.session_state[str(i)+'sw_ribbon'])
-                #st.write(st.session_state)
+                st.write(st.session_state)
                 send_set_value('sw_ribbon',gala)
                 send_set_value('print_mode', gala)
                 send_set_value('tear_off', gala)
+                send_set_value('sensor_select', gala)
+                send_set_value('media_power_up', gala)
+                send_set_value('head_close', gala)
+                send_set_value('buzzer', gala)
+                send_set_value('speed', gala)
                 send_set_value('density', gala)
+                send_set_value('media_sensor', gala)
+                #send_set_value('ethernet_switch', gala)
+                #send_set_value('eth_dhcp', gala)
                 send_set_value('eth_ip', gala)
-                #send_set_value('tear_off', gala)
+                send_set_value('eth_mask', gala)
+                send_set_value('eth_gateway', gala)
+                send_set_value('wlan_mod', gala)
+                send_set_value('wlan_ssid', gala)
+                send_set_value('wlan_key', gala)
+                #send_set_value('wlan_dhcp', gala)
+                send_set_value('wlan_ip', gala)
+                send_set_value('wlan_mask', gala)
+                send_set_value('wlan_gateway', gala)
+                #send_set_value('wlan_key_require', gala)
+
         #st.write(st.session_state)
 
 
