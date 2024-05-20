@@ -201,9 +201,9 @@ if st.session_state['sidebar_main'] == 'Изменение настроек':
         if 'media_power_up' in st.session_state['curr_set']:
             if st.session_state['curr_set']['media_power_up'] not in ['', None]:
                 printer.media_power_up()
-        if 'head_close' in st.session_state['curr_set']:
-            if st.session_state['curr_set']['head_close'] not in ['',None]:
-                printer.head_close()
+        # if 'head_close' in st.session_state['curr_set']:
+        #     if st.session_state['curr_set']['head_close'] not in ['',None]:
+        #         printer.head_close()
         if 'buzzer' in st.session_state['curr_set']:
             if st.session_state['curr_set']['buzzer'] not in ['', None, "None", 'none']:
                 printer.buzzer()
