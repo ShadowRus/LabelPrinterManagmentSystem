@@ -246,7 +246,7 @@ if st.session_state['sidebar_main'] == 'Изменение настроек':
                     printer.wlan_key_require()
         if st.session_state[str(i)+'is_disabled'] == True:
             if st.button('Обновить настройки'):
-                st.success(f'Настройки успешно обновлены на {st.session_state['ip_4_1']} ( {st.session_state[str(i) + 'serial_no']} )')
+                st.success(f"Настройки успешно обновлены на {st.session_state['ip_4_1']} ( {st.session_state[str(i) + 'serial_no']} )")
                 st.write(st.session_state)
                 send_set_value('sw_ribbon',gala)
                 send_set_value('print_mode', gala)

@@ -1,0 +1,10 @@
+Delete docker
+sudo docker rmi -f mdm-printer
+Создать
+sudo docker build -t mdm-printer .
+Запустить
+sudo docker run -p 80:8501 -p 8901:8901 mdm-printer
+Выгрузить как файл
+sudo docker save -o mdm-printer.tar mdm-printer
+Загрузить
+sudo docker load -i mdm-printer.tar
