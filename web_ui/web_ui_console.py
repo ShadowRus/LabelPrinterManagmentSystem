@@ -198,9 +198,9 @@ if st.session_state['sidebar_main'] == 'Изменение настроек':
             printer.tear_off()
         if 'sensor_select' in st.session_state['curr_set']:
             printer.sensor_select()
-        if 'media_power_up' in st.session_state['curr_set']:
-            if st.session_state['curr_set']['media_power_up'] not in ['', None]:
-                printer.media_power_up()
+        # if 'media_power_up' in st.session_state['curr_set']:
+        #     if st.session_state['curr_set']['media_power_up'] not in ['', None]:
+        #         printer.media_power_up()
         # if 'head_close' in st.session_state['curr_set']:
         #     if st.session_state['curr_set']['head_close'] not in ['',None]:
         #         printer.head_close()
