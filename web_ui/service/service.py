@@ -25,8 +25,8 @@ def read_json_to_dict(json_file_path):
 
 HOST_BACKEND = config('HOST_SERVER', default=extract_ip())
 PORT_BACKEND = config('PORT_SERVER', default=8091)
-SGD_GALA = config('SGD_GALA',default='./server/src/sgdGala.json')
-SGD_TT42 = config('SGD_TT42',default='./server/src/sgdGala.json')
+SGD_GALA = config('SGD_GALA',default='./server/src/sgdTT6XX.json')
+SGD_TT42 = config('SGD_TT42',default='./server/src/sgdTT42.json')
 POST_SETTINGS =config('POST_SETTINGS',default='/v1/settings')
 POST_PRINTER = config('POST_PRINTER',default = '/v1/printer')
 GET_PRINTERS = config('GET_PRINTERS',default = '/v1/printers')

@@ -6,7 +6,7 @@ from server.schema.AddEditPrinterInfo import AddPrinter ,SyhchPrinter,PrinterID
 from sqlalchemy.orm import Session
 from decouple import config
 from server.api import deps
-from server.service.service import sgd_cmd ,get_sgd ,get_info ,update_info,get_current_set ,rename ,gala,apollo,cmd_dict ,check_ip_adresses,SERIAL_NO,VENDOR_MODEL
+from server.service.service import sgd_cmd ,get_sgd ,get_info ,update_info,get_current_set ,rename ,tt6xx,tt44_43,tt42,cmd_dict ,check_ip_adresses,SERIAL_NO,VENDOR_MODEL
 import os
 import datetime
 

@@ -1,10 +1,19 @@
 {
-  "printer": "Gala",
+  "printer": "TT6XX",
+  "vendor_name": [
+      "Gala",
+      "Gala-203",
+      "Glory-L",
+      "iX4L-203"
+   ],
   "getval":{
     "serial_no": "serial_no",
     "printer_version": "printer_version",
     "model": "printer_name",
     "mileage": "mileage",
+    "ppl": "ppl",
+    "use_capacity": "use_capacity",
+    "remain_capacity": "remain_capacity",
     "cutter_cnt": "cutter_cnt",
     "sw_ribbon": "sw_ribbon",
     "print_mode": "print_mode",

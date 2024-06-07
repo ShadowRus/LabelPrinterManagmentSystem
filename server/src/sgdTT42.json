@@ -1,0 +1,77 @@
+{
+  "printer": "TT42",
+  "vendor_name": [
+    "HD100",
+    "HT100"
+  ],
+  "getval": {
+    "serial_no": "serial_no",
+    "printer_version": "printer_version",
+    "model": "printer_name",
+    "mileage": "mileage",
+    "ppl": "ppl",
+    "use_capacity": "use_capacity",
+    "remain_capacity": "remain_capacity",
+    "fonts":"fonts",
+    "sw_ribbon": "sw_ribbon",
+    "print_mode": "print_mode",
+    "dpi": "dpi",
+    "tear_off": "tear_off",
+    "sensor_select": "sensor_select",
+    "media_power_up": "media_power_up",
+    "speed": "speed",
+    "density": "density",
+    "media_sensor": "media_sensor",
+    "eth_dhcp": "eth_dhcp",
+    "eth_ip": "eth_ip",
+    "eth_mask":"eth_mask" ,
+    "eth_gateway":"eth_gateway",
+    "eth_mac":"eth_mac"
+  },
+  "do":{
+    "reset_printer": "reset_printer",
+    "factory_default": "factory_default",
+    "configguration_page": "configguration_page"
+  },
+  "setval": {
+    "sw_ribbon":{
+      "Прямая термопечать": "off",
+      "Термотрансферная печать": "on"
+    },
+    "print_mode": {
+      "Оторвать этикетку": "tear",
+      "Гильотинный нож": "cutter"
+    },
+    "sensor_select":{
+      "Автоматически": "auto",
+      "На просвет": "transmissive",
+      "На отражение": "reflective"
+    },
+    "media_power_up":{
+      "Нет": "none",
+      "Промотка": "feed",
+      "Калибровка": "calibration"
+    },
+    "tear_off": {
+      "min": -120,
+      "max": 120
+    },
+    "speed":{
+      "min": 2,
+      "max": 5
+    },
+    "density": {
+      "min": 1,
+      "max": 30
+    },
+    "media_sensor": {
+      "Зазор": "gap",
+      "Непрерывный": "continuous",
+      "Черная метка": "black_mark"
+    },
+    "eth_dhcp":{
+      "Включено": "on",
+      "Выключено": "off"
+    }
+  }
+}

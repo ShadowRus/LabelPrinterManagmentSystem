@@ -8,7 +8,6 @@ from typing import Sequence, List, Optional
 class Printers(Base):
     __tablename__ = "PRINTERS"
     id = Column(Integer, primary_key=True, index=True)
-    print_name = Column(String)
     serial = Column(String,index=True)
     inv_num = Column(String)
     location = Column(String)
@@ -36,6 +35,7 @@ class PrintersInfo(Base):
 class PrintersSettings(Base):
     __tablename__= "PRINTER_CURRENT_SETTINGS"
     id = Column(Integer, primary_key=True, index=True)
+    get_at = Column(Integer)
     printer_id = Column(Integer, index=True)
     sw_ribbon = Column(String) #off
     print_mode = Column(String) #tear гильотинный нож Оторвать этикетку   tear Отделитель этикетки peel Гильотинный нож cutter Барабанный нож recycle Смотчик roll_cutter
@@ -43,7 +43,10 @@ class PrintersSettings(Base):
     sensor_select = Column(String) # автоматически auto на просвет transmissive на отражение reflective
     media_power_up = Column(String) #none промотка feed калибровка  calibration нет none
     head_close = Column(String) #calibration промотка калибровка нет
-    #ppl = Column(String) #zpl
+    ppl = Column(String) #zpl
+    use_capacity = Column(String)
+    remain_capacity = Column(String)
+    fonts= Column(String)
     buzzer = Column(String) #2 отключить - 0 низкий -1  стандартный - 2 громкий - 3
     speed = Column(String) #5 (2 - 12)
     density = Column(String) #10 (1 - 30)
@@ -79,6 +82,7 @@ class PrinterProfile(Base):
     tear_off = Column(String)  # -120 ... 120
     sensor_select = Column(String)  # автоматически auto на просвет transmissive на отражение reflective
     media_power_up = Column(String)  # none промотка feed калибровка  calibration нет none
+    ppl = Column(String)
     head_close = Column(String)  # calibration промотка калибровка нет
     buzzer = Column(String)  # 2 отключить - 0 низкий -1  стандартный - 2 громкий - 3
     speed = Column(String)  # 5 (2 - 12)

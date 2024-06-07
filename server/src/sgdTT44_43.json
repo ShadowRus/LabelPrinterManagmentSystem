@@ -1,0 +1,12 @@
+{
+  "printer": "TT42",
+  "vendor_name": [
+    "HT800-203",
+    "HT830",
+    "Apollo",
+    "Apollo Pro-203"
+  ],
+  "getval":{
+    "model": "printer_name"
+  }
+}
