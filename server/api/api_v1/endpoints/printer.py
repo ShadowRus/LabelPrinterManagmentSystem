@@ -6,7 +6,7 @@ from server.schema.AddEditPrinterInfo import AddPrinter ,SyhchPrinter,PrinterID
 from sqlalchemy.orm import Session
 from decouple import config
 from server.api import deps
-from server.service.service import sgd_cmd ,get_sgd ,get_info ,update_info,get_current_set ,rename ,tt6xx,tt44_43,tt42,cmd_dict ,check_ip_adresses,SERIAL_NO,VENDOR_MODEL
+from server.service.service import sgd_cmd ,get_sgd ,get_info ,update_info,get_current_set ,rename ,tt6xx,tt44_43,tt42,cmd_dict ,check_ip_adresses,SERIAL_NO,VENDOR_MODEL,get_value_or_none
 import os
 import datetime
 
@@ -27,6 +27,11 @@ def get_printers(db: Session = Depends(deps.get_db)):
              description="Выгрузка их базы ")
 def get_printers(db: Session = Depends(deps.get_db)):
     return db.query(PrintersInfo).all()
+
+@router.get("/printers/current_settings",summary="Получаем информацию о принтерах в базе PRINTER_CURRENT_SETTINGS",
+             description="Выгрузка их из базы ")
+def get_printers(db: Session = Depends(deps.get_db)):
+    return db.query(PrintersSettings).all()
 
 
 @router.post("/printer", summary="Добавляем принтер в БД",
@@ -62,9 +67,8 @@ def post_printer(data: AddPrinter ,db: Session = Depends(deps.get_db)):
             db.commit()
             db.refresh(printer_temp)
         if data.in_use == 1:
-            print(data)
             if data.url != None:
-                print('URL')
+                printer_name = rename(str(repeat_sgd_cmd(host, port, get_sgd(VENDOR_MODEL))), rename_atol)
                 serial = sgd_cmd(data.url, data.port, get_sgd(SERIAL_NO))
                 print(f'Serial: {serial}')
                 if data.serial == None:

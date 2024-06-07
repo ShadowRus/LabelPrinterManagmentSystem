@@ -218,67 +218,89 @@ def get_info(data):
 def update_info(printer_info_temp):
     temp = get_current_set(printer_info_temp.url, printer_info_temp.port)
     if temp != {}:
-        printer_info_temp.mileage=to_float(temp['mileage']) * 0.0254
-        printer_info_temp.cutter_cnt=to_int(get_value_or_none(temp,'cutter_cnt'))
-        printer_info_temp.dpi= str(get_value_or_none(temp,'dpi'))
-        printer_info_temp.version=str(get_value_or_none(temp,'printer_version'))
-        printer_info_temp.eth_mac=str(get_value_or_none(temp,'eth_mac'))
-        printer_info_temp.wlan_mac=str(get_value_or_none(temp,'wlan_mac'))
+        printer_info_temp.mileage = to_float(temp['mileage']) * 0.0254
+        printer_info_temp.cutter_cnt = to_int(get_value_or_none(temp, 'cutter_cnt'))
+        printer_info_temp.dpi = str(get_value_or_none(temp, 'dpi'))
+        printer_info_temp.version = str(get_value_or_none(temp, 'printer_version'))
+        printer_info_temp.eth_mac = str(get_value_or_none(temp, 'eth_mac'))
+        printer_info_temp.wlan_mac = str(get_value_or_none(temp, 'wlan_mac'))
     return printer_info_temp
 
-# def get_current_set(printer_temp, gala):
-#     printer_settings_temp = PrintersSettings(
-#         printer_id = printer_temp.id,
-#         sw_ribbon = str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['sw_ribbon']))),
-#         print_mode=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['print_mode']))),
-#         tear_off=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['tear_off']))),
-#         sensor_select=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['sensor_select']))),
-#         media_power_up=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['media_power_up']))),
-#         head_close=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['head_close']))),
-#         buzzer=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['buzzer']))),
-#         speed=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['speed']))),
-#         density=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['density']))),
-#         media_sensor=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['media_sensor']))),
-#         ethernet_switch=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['ethernet_switch']))),
-#         eth_dhcp=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['eth_dhcp']))),
-#         eth_ip=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['eth_ip']))),
-#         eth_mask=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['eth_mask']))),
-#         eth_gateway=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['eth_gateway']))),
-#         eth_mac=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['eth_mac']))),
-#         wlan_mod=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['wlan_mode']))),
-#         wlan_ssid=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['wlan_ssid']))),
-#         wlan_key=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['wlan_key']))),
-#         wlan_dhcp=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['wlan_dhcp']))),
-#         wlan_ip=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['wlan_ip']))),
-#         wlan_mask=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['wlan_mask']))),
-#         wlan_gateway=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['wlan_gateway']))),
-#         wlan_mac=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['wlan_mac']))),
-#         wlan_key_require=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['wlan_key_require']))),
-#         printer_time_year=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['printer_time_year']))),
-#         printer_time_month=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['printer_time_month']))),
-#         printer_time_day=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['printer_time_day']))),
-#         printer_time_hour=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['printer_time_hour']))),
-#         printer_time_minute=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['printer_time_minute']))),
-#         printer_time_second=str(sgd_cmd(printer_temp.url, printer_temp.port, get_sgd(gala['getval']['printer_time_second'])))
-#     )
-#     return printer_settings_temp
+def update_current_set_BD(printer_settings_temp,printer_info_temp):
+    temp = get_current_set(printer_info_temp.url, printer_info_temp.port)
+    if temp != {}:
+        printer_settings_temp.sw_ribbon=str(get_value_or_none(temp, 'sw_ribbon'))
+        printer_settings_temp.print_mode = str(get_value_or_none(temp, 'print_mode'))
+        printer_settings_temp.tear_off = str(get_value_or_none(temp, 'tear_off'))
+        printer_settings_temp.sensor_select = str(get_value_or_none(temp, 'sensor_select'))
+        printer_settings_temp.media_power_up = str(get_value_or_none(temp, 'media_power_up'))
+        printer_settings_temp.head_close = str(get_value_or_none(temp, 'head_close'))
+        printer_settings_temp.buzzer = str(get_value_or_none(temp, 'head_close'))
+        printer_settings_temp.speed = str(get_value_or_none(temp, 'head_close'))
+        printer_settings_temp.density = str(get_value_or_none(temp, 'head_close'))
+        printer_settings_temp.media_sensor = str(get_value_or_none(temp, 'head_close'))
+        printer_settings_temp.ethernet_switch = str(get_value_or_none(temp, 'head_close'))
+        printer_settings_temp.eth_dhcp = str(get_value_or_none(temp, 'eth_dhcp'))
+        printer_settings_temp.eth_ip = str(get_value_or_none(temp, 'eth_ip'))
+        printer_settings_temp.eth_mask = str(get_value_or_none(temp, 'eth_mask'))
+        printer_settings_temp.eth_gateway = str(get_value_or_none(temp, 'eth_gateway'))
+        printer_settings_temp.eth_mac = str(get_value_or_none(temp, 'eth_mac'))
+        printer_settings_temp.wlan_mod = str(get_value_or_none(temp, 'wlan_mod'))
+        printer_settings_temp.wlan_ssid = str(get_value_or_none(temp, 'wlan_ssid'))
+        printer_settings_temp.wlan_key = str(get_value_or_none(temp, 'wlan_key'))
+        printer_settings_temp.wlan_dhcp = str(get_value_or_none(temp, 'wlan_dhcp'))
+        printer_settings_temp.wlan_ip = str(get_value_or_none(temp, 'wlan_ip'))
+        printer_settings_temp.wlan_mask = str(get_value_or_none(temp, 'wlan_mask'))
+        printer_settings_temp.wlan_gateway = str(get_value_or_none(temp, 'wlan_gateway'))
+        printer_settings_temp.wlan_mac = str(get_value_or_none(temp, 'wlan_mac'))
+        printer_settings_temp.wlan_key_require = str(get_value_or_none(temp, 'wlan_key_require'))
+        printer_settings_temp.printer_time_timezone = str(get_value_or_none(temp, 'printer_time_timezone'))
+        printer_settings_temp.ppl = str(get_value_or_none(temp, 'ppl'))
+        printer_settings_temp.use_capacity = str(get_value_or_none(temp, 'use_capacity'))
+        printer_settings_temp.remain_capacity = str(get_value_or_none(temp, 'remain_capacity'))
+        printer_settings_temp.fonts = str(get_value_or_none(temp, 'fonts'))
+    return printer_settings_temp
 
 
-# def sgd_cmd(host, port, sgd):
-#     import socket
-#     mysocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-#     try:
-#         mysocket.connect((host, port))
-#         mysocket.settimeout(5)
-#         mysocket.send(sgd)
-#         a1 = b'\x00'
-#         a1 = a1.decode('utf-8')
-#         recv = mysocket.recv(4096).decode('utf-8')
-#         if recv[-1] == a1:
-#             return recv[:-1]
-#         else:
-#             return recv
-#     except:
-#         return None
-#     finally:
-#         mysocket.close()
+
+def get_current_set_BD(printer_info_temp):
+    temp = get_current_set(printer_info_temp.url, printer_info_temp.port)
+    if temp != {}:
+        printer_settings_temp = PrintersSettings(
+            printer_id=printer_info_temp.printer_id,
+            sw_ribbon=str(get_value_or_none(temp, 'sw_ribbon')),
+            print_mode=str(get_value_or_none(temp, 'print_mode')),
+            tear_off=str(get_value_or_none(temp, 'tear_off')),
+            sensor_select=str(get_value_or_none(temp, 'sensor_select')),
+            media_power_up=str(get_value_or_none(temp, 'media_power_up')),
+            head_close=str(get_value_or_none(temp, 'head_close')),
+            buzzer=str(get_value_or_none(temp, 'head_close')),
+            speed=str(get_value_or_none(temp, 'head_close')),
+            density=str(get_value_or_none(temp, 'head_close')),
+            media_sensor=str(get_value_or_none(temp, 'head_close')),
+            ethernet_switch=str(get_value_or_none(temp, 'head_close')),
+            eth_dhcp=str(get_value_or_none(temp, 'eth_dhcp')),
+            eth_ip=str(get_value_or_none(temp, 'eth_ip')),
+            eth_mask=str(get_value_or_none(temp, 'eth_mask')),
+            eth_gateway=str(get_value_or_none(temp, 'eth_gateway')),
+            eth_mac=str(get_value_or_none(temp, 'eth_mac')),
+            wlan_mod=str(get_value_or_none(temp, 'wlan_mod')),
+            wlan_ssid=str(get_value_or_none(temp, 'wlan_ssid')),
+            wlan_key=str(get_value_or_none(temp, 'wlan_key')),
+            wlan_dhcp=str(get_value_or_none(temp, 'wlan_dhcp')),
+            wlan_ip=str(get_value_or_none(temp, 'wlan_ip')),
+            wlan_mask=str(get_value_or_none(temp, 'wlan_mask')),
+            wlan_gateway=str(get_value_or_none(temp, 'wlan_gateway')),
+            wlan_mac=str(get_value_or_none(temp, 'wlan_mac')),
+            wlan_key_require=str(get_value_or_none(temp, 'wlan_key_require')),
+            printer_time_timezone=str(get_value_or_none(temp, 'printer_time_timezone')),
+            ppl=str(get_value_or_none(temp, 'ppl')),
+            use_capacity=str(get_value_or_none(temp, 'use_capacity')),
+            remain_capacity=str(get_value_or_none(temp, 'remain_capacity')),
+            fonts=str(get_value_or_none(temp, 'fonts'))
+        )
+    else:
+        printer_settings_temp = PrintersSettings(
+            printer_id=printer_info_temp.printer_id,
+        )
+    return printer_settings_temp

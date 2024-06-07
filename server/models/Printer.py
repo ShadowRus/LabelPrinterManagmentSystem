@@ -66,12 +66,6 @@ class PrintersSettings(Base):
     wlan_gateway = Column(String) #192.168.1.1
     wlan_mac = Column(String)  #00:00:00:00:00:00
     wlan_key_require = Column(String) #NO/YES
-    printer_time_year = Column(Integer)
-    printer_time_month = Column(Integer)
-    printer_time_day = Column(Integer)
-    printer_time_hour = Column(Integer)
-    printer_time_minute = Column(Integer)
-    printer_time_second = Column(Integer)
     printer_time_timezone = Column(Integer)
 
 class PrinterProfile(Base):
@@ -101,7 +95,7 @@ class PrinterProfile(Base):
     wlan_mask = Column(String)  # 255.255.255.0
     wlan_gateway = Column(String)  # 192.168.1.1
     wlan_key_require = Column(String)  # NO/YES
-    printer_time = Column(Integer)
+    printer_time = Column(String)
 
 
 

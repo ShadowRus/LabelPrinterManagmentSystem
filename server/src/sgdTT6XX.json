@@ -12,6 +12,7 @@
     "model": "printer_name",
     "mileage": "mileage",
     "ppl": "ppl",
+    "fonts":"fonts",
     "use_capacity": "use_capacity",
     "remain_capacity": "remain_capacity",
     "cutter_cnt": "cutter_cnt",
